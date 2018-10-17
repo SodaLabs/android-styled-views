@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/toolbar_height" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/btn_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/guide_toolbar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    <!-- Gesture policy options -->
+
+    <TextView
+        android:id="@+id/label_gesture_policy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="6dp"
+        android:text="@string/gesture_policy"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/label_gesture_policy"
+        app:layout_constraintLeft_toRightOf="@id/label_gesture_policy"
+        app:layout_constraintTop_toTopOf="@id/label_gesture_policy">
+
+        <RadioButton
+            android:id="@+id/opt_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/gesture_policy_all" />
+
+        <RadioButton
+            android:id="@+id/opt_drag_only"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gesture_policy_drag_only" />
+    </RadioGroup>
+
+    <!-- Tap toggle button -->
+
+    <TextView
+        android:id="@+id/label_tap_listener"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="@string/enable_tap"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_gesture_policy" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/toggle_tap"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@id/label_tap_listener"
+        app:layout_constraintLeft_toRightOf="@id/label_tap_listener"
+        app:layout_constraintTop_toTopOf="@id/label_tap_listener" />
+
+    <!-- Drag toggle button -->
+
+    <TextView
+        android:id="@+id/label_drag_listener"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="6dp"
+        android:text="@string/enable_drag"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_tap_listener" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/toggle_drag"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@id/label_drag_listener"
+        app:layout_constraintLeft_toRightOf="@id/label_drag_listener"
+        app:layout_constraintTop_toTopOf="@id/label_drag_listener" />
+
+    <!-- Pinch toggle button -->
+
+    <TextView
+        android:id="@+id/label_pinch_listener"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="@string/enable_pinch"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_drag_listener" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/toggle_pinch"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@id/label_pinch_listener"
+        app:layout_constraintLeft_toRightOf="@id/label_pinch_listener"
+        app:layout_constraintTop_toTopOf="@id/label_pinch_listener" />
+
+    <!-- Touch view -->
+    <io.useful.demo.view.DemoView
+        android:id="@+id/canvas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_pinch_listener" />
+
+    <!-- Log -->
+    <TextView
+        android:id="@+id/txt_gesture_test"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:gravity="start"
+        android:padding="24dp"
+        android:text="@string/tap_anywhere_to_start"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_pinch_listener" />
+</android.support.constraint.ConstraintLayout>

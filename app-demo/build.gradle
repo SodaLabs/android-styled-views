@@ -84,6 +84,7 @@ dependencies {
 
     // My Libraries.
     implementation project(path: ':styled-recycler-view')
+    implementation project(path: ':styled-switch-view')
 
     testImplementation rootProject.ext.dep.testJunit
 

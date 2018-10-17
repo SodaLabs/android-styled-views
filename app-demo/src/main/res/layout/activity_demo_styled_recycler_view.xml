@@ -12,6 +12,7 @@
         android:layout_height="60dp">
 
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/btClose"
             android:layout_width="32dp"
             android:layout_height="32dp"
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />

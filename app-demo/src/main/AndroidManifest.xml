@@ -28,5 +28,15 @@
         <activity
             android:name=".DemoActivity">
         </activity>
+
+        <!-- RecyclerView Demo -->
+        <activity
+            android:name=".StyledRecyclerViewDemo">
+        </activity>
+
+        <!-- Switch Demo -->
+        <activity
+            android:name=".StyledSwitchDemo">
+        </activity>
     </application>
 </manifest>
