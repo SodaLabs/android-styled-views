@@ -27,8 +27,7 @@
             tools:ignore="HardcodedText" />
     </android.support.v7.widget.Toolbar>
 
-    <!--<co.sodalabs.view.StyledSwitch-->
-    <android.support.v7.widget.SwitchCompat
+    <co.sodalabs.view.StyledSwitch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
