@@ -4,30 +4,25 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 
+typealias OnToggleListener = (toggleableView: ToggleableView, isOn: Boolean) -> Unit
+
 open class ToggleableView : View {
 
     protected var mWidth: Int = 0
     protected var mHeight: Int = 0
 
     /**
-     *
      * Boolean state of this Switch.
-     *
      */
     open var isOn: Boolean = false
 
     /**
      * Field to determine whether switch is mEnabled/disabled.
-     *
-     * @see .isEnabled
-     * @see .setMEnabled
      */
-    var mEnabled: Boolean = false
+    var mEnabled: Boolean = true
 
     /**
      * Listener used to dispatch switch events.
-     *
-     * @see .setOnToggledListener
      */
     protected var onToggledListener: OnToggleListener? = null
 

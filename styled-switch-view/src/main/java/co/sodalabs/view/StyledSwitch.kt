@@ -18,30 +18,26 @@ import android.view.animation.AccelerateDecelerateInterpolator
 class StyledSwitch : ToggleableView {
     private var padding: Int = 0
 
-    private var colorOn: Int = 0
-    private var colorOff: Int = 0
-    private var colorBorder: Int = 0
-    private var colorDisabled: Int = 0
-
     private var textSize: Int = 0
+        set(value) {
+            field = (value.toFloat() * resources.displayMetrics.scaledDensity).toInt()
+            invalidate()
+        }
 
     private var outerRadii: Int = 0
     private var thumbRadii: Int = 0
 
-    private var paint: Paint? = null
+    private val paint by lazy { Paint() }
 
     private var startTime: Long = 0
 
-    private var labelOn: String? = null
-    private var labelOff: String? = null
+    private var thumbBounds = RectF()
 
-    private var thumbBounds: RectF? = null
+    private var leftBgArc = RectF()
+    private var rightBgArc = RectF()
 
-    private var leftBgArc: RectF? = null
-    private var rightBgArc: RectF? = null
-
-    private var leftFgArc: RectF? = null
-    private var rightFgArc: RectF? = null
+    private var leftFgArc = RectF()
+    private var rightFgArc = RectF()
 
     /**
      * Typeface for Switch on/off labels.
@@ -49,7 +45,61 @@ class StyledSwitch : ToggleableView {
     var typeface: Typeface? = null
         set(typeface) {
             field = typeface
-            paint!!.typeface = typeface
+            paint.typeface = typeface
+            invalidate()
+        }
+
+    /**
+     * Color for `on` state.
+     */
+    private var colorOn: Int = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    /**
+     * Color for `off` state.
+     */
+    private var colorOff: Int = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    /**
+     * Label for `on` state.
+     */
+    private var labelOn: String = "ON"
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    /**
+     * Label for `off` state.
+     */
+    private var labelOff: String = "OFF"
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    /**
+     * Color for Switch disabled state
+     */
+    private var colorDisabled: Int = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    /**
+     * Color for Switch border
+     */
+    private var colorBorder: Int = 0
+        set(value) {
+            field = value
             invalidate()
         }
 
@@ -63,9 +113,9 @@ class StyledSwitch : ToggleableView {
         set(value) {
             field = value
             if (isOn) {
-                thumbBounds?.set((mWidth - padding - thumbRadii).toFloat(), padding.toFloat(), (mWidth - padding).toFloat(), (mHeight - padding).toFloat())
+                thumbBounds.set((mWidth - padding - thumbRadii).toFloat(), padding.toFloat(), (mWidth - padding).toFloat(), (mHeight - padding).toFloat())
             } else {
-                thumbBounds?.set(padding.toFloat(), padding.toFloat(), (padding + thumbRadii).toFloat(), (mHeight - padding).toFloat())
+                thumbBounds.set(padding.toFloat(), padding.toFloat(), (padding + thumbRadii).toFloat(), (mHeight - padding).toFloat())
             }
             invalidate()
         }
@@ -78,180 +128,175 @@ class StyledSwitch : ToggleableView {
     }
 
     private fun initView() {
-        this.isOn = false
-        this.labelOn = "ON"
-        this.labelOff = "OFF"
-
-        this.mEnabled = true
-        this.textSize = (12f * resources.displayMetrics.scaledDensity).toInt()
+        isOn = false
+        labelOn = "ON"
+        labelOff = "OFF"
+        mEnabled = true
+        textSize = 12
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            colorOn = resources.getColor(R.color.colorAccent, context.theme)
+            colorOn = resources.getColor(R.color.colorOn, context.theme)
             colorBorder = colorOn
         } else {
-            colorOn = ContextCompat.getColor(context, R.color.colorAccent)
+            colorOn = ContextCompat.getColor(context, R.color.colorOn)
             colorBorder = colorOn
         }
 
-        paint = Paint()
-        paint!!.isAntiAlias = true
-
-        leftBgArc = RectF()
-        rightBgArc = RectF()
-
-        leftFgArc = RectF()
-        rightFgArc = RectF()
-        thumbBounds = RectF()
+        paint.isAntiAlias = true
 
         this.colorOff = Color.parseColor("#FFFFFF")
         this.colorDisabled = Color.parseColor("#D3D3D3")
     }
 
     private fun initProperties(attrs: AttributeSet?) {
-        val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.Toggle, 0, 0)
-        val count = attributes.indexCount
-        for (i in 0 until count) {
+        val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledSwitch, 0, 0)
+        for (i in 0 until attributes.indexCount) {
             val attr = attributes.getIndex(i)
             when (attr) {
-                R.styleable.Toggle_on -> isOn = attributes.getBoolean(R.styleable.Toggle_on, false)
-                R.styleable.Toggle_colorOff -> colorOff = attributes.getColor(R.styleable.Toggle_colorOff, Color.parseColor("#FFFFFF"))
-                R.styleable.Toggle_colorBorder -> {
-                    val accentColor = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        resources.getColor(R.color.colorAccent, context.theme)
+                R.styleable.StyledSwitch_on -> isOn = attributes.getBoolean(R.styleable.StyledSwitch_on, false)
+                R.styleable.StyledSwitch_colorOff -> colorOff = attributes.getColor(R.styleable.StyledSwitch_colorOff, Color.parseColor("#FFFFFF"))
+                R.styleable.StyledSwitch_colorBorder -> {
+                    val color = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        resources.getColor(R.color.colorOn, context.theme)
                     } else {
-                        ContextCompat.getColor(context, R.color.colorAccent)
+                        ContextCompat.getColor(context, R.color.colorOn)
                     }
-                    colorBorder = attributes.getColor(R.styleable.Toggle_colorBorder, accentColor)
+                    colorBorder = attributes.getColor(R.styleable.StyledSwitch_colorBorder, color)
                 }
-                R.styleable.Toggle_colorOn -> {
-                    val accentColor = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        resources.getColor(R.color.colorAccent, context.theme)
+                R.styleable.StyledSwitch_colorOn -> {
+                    val color = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        resources.getColor(R.color.colorOn, context.theme)
                     } else {
-                        ContextCompat.getColor(context, R.color.colorAccent)
+                        ContextCompat.getColor(context, R.color.colorOn)
                     }
-                    colorOn = attributes.getColor(R.styleable.Toggle_colorOn, accentColor)
+                    colorOn = attributes.getColor(R.styleable.StyledSwitch_colorOn, color)
                 }
-                R.styleable.Toggle_colorDisabled -> colorDisabled = attributes.getColor(R.styleable.Toggle_colorOff, Color.parseColor("#D3D3D3"))
-                R.styleable.Toggle_textOff -> labelOff = attributes.getString(R.styleable.Toggle_textOff)
-                R.styleable.Toggle_textOn -> labelOn = attributes.getString(R.styleable.Toggle_textOn)
-                R.styleable.Toggle_android_textSize -> {
+                R.styleable.StyledSwitch_colorDisabled -> colorDisabled = attributes.getColor(R.styleable.StyledSwitch_colorOff, Color.parseColor("#D3D3D3"))
+                R.styleable.StyledSwitch_textOff -> labelOff = attributes.getString(R.styleable.StyledSwitch_textOff)
+                R.styleable.StyledSwitch_textOn -> labelOn = attributes.getString(R.styleable.StyledSwitch_textOn)
+                R.styleable.StyledSwitch_android_textSize -> {
                     val defaultTextSize = (12f * resources.displayMetrics.scaledDensity).toInt()
-                    textSize = attributes.getDimensionPixelSize(R.styleable.Toggle_android_textSize, defaultTextSize)
+                    textSize = attributes.getDimensionPixelSize(R.styleable.StyledSwitch_android_textSize, defaultTextSize)
                 }
-                R.styleable.Toggle_android_enabled -> mEnabled = attributes.getBoolean(R.styleable.Toggle_android_enabled, false)
+                R.styleable.StyledSwitch_android_enabled -> mEnabled = attributes.getBoolean(R.styleable.StyledSwitch_android_enabled, false)
             }
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        paint!!.textSize = textSize.toFloat()
+        drawSwitchBackground(paint, canvas)
+        drawSwitchLabels(paint, canvas)
+        drawSwitchThumb(paint, canvas)
+    }
 
-        //      Drawing Switch background here
-        run {
-            if (isEnabled) {
-                paint!!.color = colorBorder
-            } else {
-                paint!!.color = colorDisabled
-            }
-            canvas.drawArc(leftBgArc!!, 90f, 180f, false, paint!!)
-            canvas.drawArc(rightBgArc!!, 90f, -180f, false, paint!!)
-            canvas.drawRect(outerRadii.toFloat(), 0f, (mWidth - outerRadii).toFloat(), mHeight.toFloat(), paint!!)
-
-            paint!!.color = colorOff
-
-            canvas.drawArc(leftFgArc!!, 90f, 180f, false, paint!!)
-            canvas.drawArc(rightFgArc!!, 90f, -180f, false, paint!!)
-            canvas.drawRect(outerRadii.toFloat(), (padding / 10).toFloat(), (mWidth - outerRadii).toFloat(), (mHeight - padding / 10).toFloat(), paint!!)
-
-            var alpha = ((thumbBounds!!.centerX() - thumbOffCenterX) / (thumbOnCenterX - thumbOffCenterX) * 255).toInt()
-            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
-            val onColor = if (isEnabled) {
-                Color.argb(alpha, Color.red(colorOn), Color.green(colorOn), Color.blue(colorOn))
-            } else {
-                Color.argb(alpha, Color.red(colorDisabled), Color.green(colorDisabled), Color.blue(colorDisabled))
-            }
-            paint!!.color = onColor
-
-            canvas.drawArc(leftBgArc!!, 90f, 180f, false, paint!!)
-            canvas.drawArc(rightBgArc!!, 90f, -180f, false, paint!!)
-            canvas.drawRect(outerRadii.toFloat(), 0f, (mWidth - outerRadii).toFloat(), mHeight.toFloat(), paint!!)
-
-            alpha = ((thumbOnCenterX - thumbBounds!!.centerX()) / (thumbOnCenterX - thumbOffCenterX) * 255).toInt()
-            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
-            val offColor = Color.argb(alpha, Color.red(colorOff), Color.green(colorOff), Color.blue(colorOff))
-            paint!!.color = offColor
-
-            canvas.drawArc(leftFgArc!!, 90f, 180f, false, paint!!)
-            canvas.drawArc(rightFgArc!!, 90f, -180f, false, paint!!)
-            canvas.drawRect(outerRadii.toFloat(), (padding / 10).toFloat(), (mWidth - outerRadii).toFloat(), (mHeight - padding / 10).toFloat(), paint!!)
+    private fun drawSwitchBackground(p: Paint, canvas: Canvas) {
+        p.textSize = textSize.toFloat()
+        p.color = if (isEnabled) colorBorder else colorDisabled
+        canvas.run {
+            drawArc(leftBgArc, 90f, 180f, false, p)
+            drawArc(rightBgArc, 90f, -180f, false, p)
+            drawRect(outerRadii.toFloat(), 0f, (mWidth - outerRadii).toFloat(), mHeight.toFloat(), p)
         }
 
-        //      Drawing Switch Labels here
-        val textCenter = paint!!.measureText("N") / 2
-        if (isOn) {
-            var alpha = ((mWidth.ushr(1) - thumbBounds!!.centerX()) / (mWidth.ushr(1) - thumbOffCenterX) * 255).toInt()
-            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
-            val onColor = Color.argb(alpha, Color.red(colorOn), Color.green(colorOn), Color.blue(colorOn))
-            paint!!.color = onColor
-
-            var centerX = (mWidth - padding - (padding + padding.ushr(1) + (thumbRadii shl 1))).ushr(1).toFloat()
-            canvas.drawText(labelOff!!, (padding + padding.ushr(1)).toFloat() + (thumbRadii shl 1).toFloat() + centerX - paint!!.measureText(labelOff) / 2, mHeight.ushr(1) + textCenter, paint!!)
-
-            alpha = ((thumbBounds!!.centerX() - mWidth.ushr(1)) / (thumbOnCenterX - mWidth.ushr(1)) * 255).toInt()
-            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
-            val offColor = Color.argb(alpha, Color.red(colorOff), Color.green(colorOff), Color.blue(colorOff))
-            paint!!.color = offColor
-
-            val maxSize = mWidth - (padding shl 1) - (thumbRadii shl 1)
-
-            centerX = (padding.ushr(1) + maxSize - padding).ushr(1).toFloat()
-            canvas.drawText(labelOn!!, padding + centerX - paint!!.measureText(labelOn) / 2, mHeight.ushr(1) + textCenter, paint!!)
-        } else {
-            var alpha = ((thumbBounds!!.centerX() - mWidth.ushr(1)) / (thumbOnCenterX - mWidth.ushr(1)) * 255).toInt()
-            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
-            val offColor = Color.argb(alpha, Color.red(colorOff), Color.green(colorOff), Color.blue(colorOff))
-            paint!!.color = offColor
-
-            val maxSize = mWidth - (padding shl 1) - (thumbRadii shl 1)
-            var centerX = (padding.ushr(1) + maxSize - padding).ushr(1).toFloat()
-            canvas.drawText(labelOn!!, padding + centerX - paint!!.measureText(labelOn) / 2, mHeight.ushr(1) + textCenter, paint!!)
-
-            alpha = ((mWidth.ushr(1) - thumbBounds!!.centerX()) / (mWidth.ushr(1) - thumbOffCenterX) * 255).toInt()
-            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
-            val onColor = if (isEnabled) {
-                Color.argb(alpha, Color.red(colorOn), Color.green(colorOn), Color.blue(colorOn))
-            } else {
-                Color.argb(alpha, Color.red(colorDisabled), Color.green(colorDisabled), Color.blue(colorDisabled))
-            }
-            paint!!.color = onColor
-
-            centerX = (mWidth - padding - (padding + padding.ushr(1) + (thumbRadii shl 1))).ushr(1).toFloat()
-            canvas.drawText(labelOff!!, (padding + padding.ushr(1)).toFloat() + (thumbRadii shl 1).toFloat() + centerX - paint!!.measureText(labelOff) / 2, mHeight.ushr(1) + textCenter, paint!!)
+        p.color = colorOff
+        canvas.run {
+            drawArc(leftFgArc, 90f, 180f, false, p)
+            drawArc(rightFgArc, 90f, -180f, false, p)
+            drawRect(outerRadii.toFloat(), (padding / 10).toFloat(), (mWidth - outerRadii).toFloat(), (mHeight - padding / 10).toFloat(), p)
         }
 
-        //      Drawing Switch Thumb here
-        var alpha = ((thumbBounds!!.centerX() - thumbOffCenterX) / (thumbOnCenterX - thumbOffCenterX) * 255).toInt()
+        var alpha = ((thumbBounds.centerX() - thumbOffCenterX) / (thumbOnCenterX - thumbOffCenterX) * 255).toInt()
         alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
-        val offColor = Color.argb(alpha, Color.red(colorOff), Color.green(colorOff), Color.blue(colorOff))
-        paint!!.color = offColor
-
-        canvas.drawCircle(thumbBounds!!.centerX(), thumbBounds!!.centerY(), thumbRadii.toFloat(), paint!!)
-        alpha = ((thumbOnCenterX - thumbBounds!!.centerX()) / (thumbOnCenterX - thumbOffCenterX) * 255).toInt()
-        alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
-        val onColor = if (isEnabled) {
+        p.color = if (isEnabled) {
             Color.argb(alpha, Color.red(colorOn), Color.green(colorOn), Color.blue(colorOn))
         } else {
             Color.argb(alpha, Color.red(colorDisabled), Color.green(colorDisabled), Color.blue(colorDisabled))
         }
-        paint!!.color = onColor
-        canvas.drawCircle(thumbBounds!!.centerX(), thumbBounds!!.centerY(), thumbRadii.toFloat(), paint!!)
+
+        canvas.run {
+            drawArc(leftBgArc, 90f, 180f, false, p)
+            drawArc(rightBgArc, 90f, -180f, false, p)
+            drawRect(outerRadii.toFloat(), 0f, (mWidth - outerRadii).toFloat(), mHeight.toFloat(), p)
+        }
+
+        alpha = ((thumbOnCenterX - thumbBounds.centerX()) / (thumbOnCenterX - thumbOffCenterX) * 255).toInt()
+        alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
+        val offColor = Color.argb(alpha, Color.red(colorOff), Color.green(colorOff), Color.blue(colorOff))
+        p.color = offColor
+
+        canvas.run {
+            drawArc(leftFgArc, 90f, 180f, false, p)
+            drawArc(rightFgArc, 90f, -180f, false, p)
+            drawRect(outerRadii.toFloat(), (padding / 10).toFloat(), (mWidth - outerRadii).toFloat(), (mHeight - padding / 10).toFloat(), p)
+        }
+    }
+
+    private fun drawSwitchLabels(p: Paint, canvas: Canvas) {
+        val textCenter = p.measureText("N") / 2
+        if (isOn) {
+            var alpha = ((mWidth.ushr(1) - thumbBounds.centerX()) / (mWidth.ushr(1) - thumbOffCenterX) * 255).toInt()
+            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
+            p.color = Color.argb(alpha, Color.red(colorOn), Color.green(colorOn), Color.blue(colorOn))
+
+            var centerX = (mWidth - padding - (padding + padding.ushr(1) + (thumbRadii shl 1))).ushr(1).toFloat()
+            canvas.drawText(labelOff, (padding + padding.ushr(1)).toFloat() + (thumbRadii shl 1).toFloat() + centerX - p.measureText(labelOff) / 2, mHeight.ushr(1) + textCenter, p)
+
+            alpha = ((thumbBounds.centerX() - mWidth.ushr(1)) / (thumbOnCenterX - mWidth.ushr(1)) * 255).toInt()
+            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
+
+            p.color = Color.argb(alpha, Color.red(colorOff), Color.green(colorOff), Color.blue(colorOff))
+
+            val maxSize = mWidth - (padding shl 1) - (thumbRadii shl 1)
+
+            centerX = (padding.ushr(1) + maxSize - padding).ushr(1).toFloat()
+            canvas.drawText(labelOn, padding + centerX - p.measureText(labelOn) / 2, mHeight.ushr(1) + textCenter, p)
+        } else {
+            var alpha = ((thumbBounds.centerX() - mWidth.ushr(1)) / (thumbOnCenterX - mWidth.ushr(1)) * 255).toInt()
+            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
+
+            p.color = Color.argb(alpha, Color.red(colorOff), Color.green(colorOff), Color.blue(colorOff))
+
+            val maxSize = mWidth - (padding shl 1) - (thumbRadii shl 1)
+            var centerX = (padding.ushr(1) + maxSize - padding).ushr(1).toFloat()
+            canvas.drawText(labelOn, padding + centerX - p.measureText(labelOn) / 2, mHeight.ushr(1) + textCenter, p)
+
+            alpha = ((mWidth.ushr(1) - thumbBounds.centerX()) / (mWidth.ushr(1) - thumbOffCenterX) * 255).toInt()
+            alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
+            p.color = if (isEnabled) {
+                Color.argb(alpha, Color.red(colorOn), Color.green(colorOn), Color.blue(colorOn))
+            } else {
+                Color.argb(alpha, Color.red(colorDisabled), Color.green(colorDisabled), Color.blue(colorDisabled))
+            }
+
+            centerX = (mWidth - padding - (padding + padding.ushr(1) + (thumbRadii shl 1))).ushr(1).toFloat()
+            canvas.drawText(labelOff, (padding + padding.ushr(1)).toFloat() + (thumbRadii shl 1).toFloat() + centerX - p.measureText(labelOff) / 2, mHeight.ushr(1) + textCenter, p)
+        }
+    }
+
+    private fun drawSwitchThumb(p: Paint, canvas: Canvas) {
+        var alpha = ((thumbBounds.centerX() - thumbOffCenterX) / (thumbOnCenterX - thumbOffCenterX) * 255).toInt()
+        alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
+
+        p.color = Color.argb(alpha, Color.red(colorOff), Color.green(colorOff), Color.blue(colorOff))
+
+        canvas.drawCircle(thumbBounds.centerX(), thumbBounds.centerY(), thumbRadii.toFloat(), p)
+
+        alpha = ((thumbOnCenterX - thumbBounds.centerX()) / (thumbOnCenterX - thumbOffCenterX) * 255).toInt()
+        alpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
+
+        p.color = if (isEnabled) {
+            Color.argb(alpha, Color.red(colorOn), Color.green(colorOn), Color.blue(colorOn))
+        } else {
+            Color.argb(alpha, Color.red(colorDisabled), Color.green(colorDisabled), Color.blue(colorDisabled))
+        }
+        canvas.drawCircle(thumbBounds.centerX(), thumbBounds.centerY(), thumbRadii.toFloat(), paint)
     }
 
     @SuppressLint("SwitchIntDef")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = resources.getDimensionPixelSize(R.dimen.labeled_default_width)
-        val desiredHeight = resources.getDimensionPixelSize(R.dimen.labeled_default_height)
+        val desiredWidth = resources.getDimensionPixelSize(R.dimen.styled_switch_default_width)
+        val desiredHeight = resources.getDimensionPixelSize(R.dimen.styled_switch_default_height)
 
         val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
@@ -276,272 +321,115 @@ class StyledSwitch : ToggleableView {
         thumbRadii = (Math.min(mWidth, mHeight) / 2.88f).toInt()
         padding = (mHeight - thumbRadii).ushr(1)
 
-        thumbBounds!!.set((mWidth - padding - thumbRadii).toFloat(), padding.toFloat(), (mWidth - padding).toFloat(), (mHeight - padding).toFloat())
-        thumbOnCenterX = thumbBounds!!.centerX()
+        thumbBounds.set((mWidth - padding - thumbRadii).toFloat(), padding.toFloat(), (mWidth - padding).toFloat(), (mHeight - padding).toFloat())
+        thumbOnCenterX = thumbBounds.centerX()
 
-        thumbBounds!!.set(padding.toFloat(), padding.toFloat(), (padding + thumbRadii).toFloat(), (mHeight - padding).toFloat())
-        thumbOffCenterX = thumbBounds!!.centerX()
+        thumbBounds.set(padding.toFloat(), padding.toFloat(), (padding + thumbRadii).toFloat(), (mHeight - padding).toFloat())
+        thumbOffCenterX = thumbBounds.centerX()
 
         if (isOn) {
-            thumbBounds!!.set((mWidth - padding - thumbRadii).toFloat(), padding.toFloat(), (mWidth - padding).toFloat(), (mHeight - padding).toFloat())
+            thumbBounds.set((mWidth - padding - thumbRadii).toFloat(), padding.toFloat(), (mWidth - padding).toFloat(), (mHeight - padding).toFloat())
         } else {
-            thumbBounds!!.set(padding.toFloat(), padding.toFloat(), (padding + thumbRadii).toFloat(), (mHeight - padding).toFloat())
+            thumbBounds.set(padding.toFloat(), padding.toFloat(), (padding + thumbRadii).toFloat(), (mHeight - padding).toFloat())
         }
 
-        leftBgArc!!.set(0f, 0f, (outerRadii shl 1).toFloat(), mHeight.toFloat())
-        rightBgArc!!.set((mWidth - (outerRadii shl 1)).toFloat(), 0f, mWidth.toFloat(), mHeight.toFloat())
+        leftBgArc.set(0f, 0f, (outerRadii shl 1).toFloat(), mHeight.toFloat())
+        rightBgArc.set((mWidth - (outerRadii shl 1)).toFloat(), 0f, mWidth.toFloat(), mHeight.toFloat())
 
-        leftFgArc!!.set((padding / 10).toFloat(), (padding / 10).toFloat(), ((outerRadii shl 1) - padding / 10).toFloat(), (mHeight - padding / 10).toFloat())
-        rightFgArc!!.set((mWidth - (outerRadii shl 1) + padding / 10).toFloat(), (padding / 10).toFloat(), (mWidth - padding / 10).toFloat(), (mHeight - padding / 10).toFloat())
+        leftFgArc.set((padding / 10).toFloat(), (padding / 10).toFloat(), ((outerRadii shl 1) - padding / 10).toFloat(), (mHeight - padding / 10).toFloat())
+        rightFgArc.set((mWidth - (outerRadii shl 1) + padding / 10).toFloat(), (padding / 10).toFloat(), (mWidth - padding / 10).toFloat(), (mHeight - padding / 10).toFloat())
     }
 
-    /**
-     * Call this view's OnClickListener, if it is defined.  Performs all normal
-     * actions associated with clicking: reporting accessibility event, playing
-     * a sound, etc.
-     *
-     * @return True there was an assigned OnClickListener that was called, false
-     * otherwise is returned.
-     */
     override fun performClick(): Boolean {
         super.performClick()
         if (isOn) {
             val switchColor = ValueAnimator.ofInt(mWidth - padding - thumbRadii, padding)
-            switchColor.addUpdateListener { animation ->
-                val value = (animation.animatedValue as Int).toFloat()
-                thumbBounds!!.set(value, thumbBounds!!.top, value + thumbRadii, thumbBounds!!.bottom)
-                invalidate()
+            switchColor.run {
+                addUpdateListener { animation ->
+                    val value = (animation.animatedValue as Int).toFloat()
+                    thumbBounds.set(value, thumbBounds.top, value + thumbRadii, thumbBounds.bottom)
+                    invalidate()
+                }
+                interpolator = AccelerateDecelerateInterpolator()
+                duration = 250
+                start()
             }
-            switchColor.interpolator = AccelerateDecelerateInterpolator()
-            switchColor.duration = 250
-            switchColor.start()
         } else {
             val switchColor = ValueAnimator.ofInt(padding, mWidth - padding - thumbRadii)
-            switchColor.addUpdateListener { animation ->
-                val value = (animation.animatedValue as Int).toFloat()
-                thumbBounds!!.set(value, thumbBounds!!.top, value + thumbRadii, thumbBounds!!.bottom)
-                invalidate()
+            switchColor.run {
+                addUpdateListener { animation ->
+                    val value = (animation.animatedValue as Int).toFloat()
+                    thumbBounds.set(value, thumbBounds.top, value + thumbRadii, thumbBounds.bottom)
+                    invalidate()
+                }
+                interpolator = AccelerateDecelerateInterpolator()
+                duration = 250
+                start()
             }
-            switchColor.interpolator = AccelerateDecelerateInterpolator()
-            switchColor.duration = 250
-            switchColor.start()
         }
         isOn = !isOn
-        onToggledListener?.onSwitched(this, isOn)
+        onToggledListener?.invoke(this, isOn)
         return true
     }
 
-    /**
-     * Method to handle touch screen motion events.
-     *
-     * @param event The motion event.
-     * @return True if the event was handled, false otherwise.
-     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (isEnabled) {
-            val x = event.x
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    startTime = System.currentTimeMillis()
-                    return true
-                }
+        if (!isEnabled) return false
 
-                MotionEvent.ACTION_MOVE -> {
-                    if (x - thumbRadii.ushr(1) > padding && x + thumbRadii.ushr(1) < mWidth - padding) {
-                        thumbBounds!!.set(x - thumbRadii.ushr(1), thumbBounds!!.top, x + thumbRadii.ushr(1), thumbBounds!!.bottom)
-                        invalidate()
-                    }
-                    return true
-                }
-
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    val endTime = System.currentTimeMillis()
-                    val span = endTime - startTime
-                    if (span < 200) {
-                        performClick()
-                    } else {
-                        if (x >= mWidth.ushr(1)) {
-                            val switchColor = ValueAnimator.ofInt(if (x > mWidth - padding - thumbRadii) mWidth - padding - thumbRadii else x.toInt(), mWidth - padding - thumbRadii)
-                            switchColor.addUpdateListener { animation ->
-                                val value = animation.animatedValue as Float
-                                thumbBounds!!.set(value, thumbBounds!!.top, value + thumbRadii, thumbBounds!!.bottom)
-                                invalidate()
-                            }
-                            switchColor.interpolator = AccelerateDecelerateInterpolator()
-                            switchColor.duration = 250
-                            switchColor.start()
-                            isOn = true
-                        } else {
-                            val switchColor = ValueAnimator.ofInt(if (x < padding) padding else x.toInt(), padding)
-                            switchColor.addUpdateListener { animation ->
-                                val value = animation.animatedValue as Float
-                                thumbBounds!!.set(value, thumbBounds!!.top, value + thumbRadii, thumbBounds!!.bottom)
-                                invalidate()
-                            }
-                            switchColor.interpolator = AccelerateDecelerateInterpolator()
-                            switchColor.duration = 250
-                            switchColor.start()
-                            isOn = false
-                        }
-                        onToggledListener?.onSwitched(this, isOn)
-                    }
-                    invalidate()
-                    return true
-                }
-
-                else -> {
-                    return super.onTouchEvent(event)
-                }
+        val x = event.x
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                startTime = System.currentTimeMillis()
+                return true
             }
-        } else {
-            return false
+
+            MotionEvent.ACTION_MOVE -> {
+                if (x - thumbRadii.ushr(1) > padding && x + thumbRadii.ushr(1) < mWidth - padding) {
+                    thumbBounds.set(x - thumbRadii.ushr(1), thumbBounds.top, x + thumbRadii.ushr(1), thumbBounds.bottom)
+                    invalidate()
+                }
+                return true
+            }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                val endTime = System.currentTimeMillis()
+                val span = endTime - startTime
+                if (span < 200) {
+                    performClick()
+                } else {
+                    if (x >= mWidth.ushr(1)) {
+                        val switchColor = ValueAnimator.ofInt(if (x > mWidth - padding - thumbRadii) mWidth - padding - thumbRadii else x.toInt(), mWidth - padding - thumbRadii)
+                        switchColor.run {
+                            addUpdateListener { animation ->
+                                val value = animation.animatedValue as Float
+                                thumbBounds.set(value, thumbBounds.top, value + thumbRadii, thumbBounds.bottom)
+                                invalidate()
+                            }
+                            interpolator = AccelerateDecelerateInterpolator()
+                            duration = 250
+                            start()
+                        }
+                        isOn = true
+                    } else {
+                        val switchColor = ValueAnimator.ofInt(if (x < padding) padding else x.toInt(), padding)
+                        switchColor.run {
+                            addUpdateListener { animation ->
+                                val value = animation.animatedValue as Float
+                                thumbBounds.set(value, thumbBounds.top, value + thumbRadii, thumbBounds.bottom)
+                                invalidate()
+                            }
+                            interpolator = AccelerateDecelerateInterpolator()
+                            duration = 250
+                            start()
+                        }
+                        isOn = false
+                    }
+                    onToggledListener?.invoke(this, isOn)
+                }
+                invalidate()
+                return true
+            }
+
+            else -> return super.onTouchEvent(event)
         }
-    }
-
-    /**
-     *
-     * Returns the color value for colorOn.
-     *
-     * @return color value for label and thumb in off state and background in on state.
-     */
-    fun getColorOn(): Int {
-        return colorOn
-    }
-
-    /**
-     *
-     * Changes the on color value of this Switch.
-     *
-     * @param colorOn color value for label and thumb in off state and background in on state.
-     */
-    fun setColorOn(colorOn: Int) {
-        this.colorOn = colorOn
-        invalidate()
-    }
-
-    /**
-     *
-     * Returns the color value for colorOff.
-     *
-     * @return color value for label and thumb in on state and background in off state.
-     */
-    fun getColorOff(): Int {
-        return colorOff
-    }
-
-    /**
-     *
-     * Changes the off color value of this Switch.
-     *
-     * @param colorOff color value for label and thumb in on state and background in off state.
-     */
-    fun setColorOff(colorOff: Int) {
-        this.colorOff = colorOff
-        invalidate()
-    }
-
-    /**
-     *
-     * Returns text label when switch is in on state.
-     *
-     * @return text label when switch is in on state.
-     */
-    fun getLabelOn(): String? {
-        return labelOn
-    }
-
-    /**
-     *
-     * Changes text label when switch is in on state.
-     *
-     * @param labelOn text label when switch is in on state.
-     */
-    fun setLabelOn(labelOn: String) {
-        this.labelOn = labelOn
-        invalidate()
-    }
-
-    /**
-     *
-     * Returns text label when switch is in off state.
-     *
-     * @return text label when switch is in off state.
-     */
-    fun getLabelOff(): String? {
-        return labelOff
-    }
-
-    /**
-     *
-     * Changes text label when switch is in off state.
-     *
-     * @param labelOff text label when switch is in off state.
-     */
-    fun setLabelOff(labelOff: String) {
-        this.labelOff = labelOff
-        invalidate()
-    }
-
-    /**
-     *
-     * Returns the color value for Switch disabled state.
-     *
-     * @return color value used by background, border and thumb when switch is disabled.
-     */
-    fun getColorDisabled(): Int {
-        return colorDisabled
-    }
-
-    /**
-     *
-     * Changes the color value for Switch disabled state.
-     *
-     * @param colorDisabled color value used by background, border and thumb when switch is disabled.
-     */
-    fun setColorDisabled(colorDisabled: Int) {
-        this.colorDisabled = colorDisabled
-        invalidate()
-    }
-
-    /**
-     *
-     * Returns the color value for Switch border.
-     *
-     * @return color value used by Switch border.
-     */
-    fun getColorBorder(): Int {
-        return colorBorder
-    }
-
-    /**
-     *
-     * Changes the color value for Switch disabled state.
-     *
-     * @param colorBorder color value used by Switch border.
-     */
-    fun setColorBorder(colorBorder: Int) {
-        this.colorBorder = colorBorder
-        invalidate()
-    }
-
-    /**
-     *
-     * Returns the text size for Switch on/off label.
-     *
-     * @return text size for Switch on/off label.
-     */
-    fun getTextSize(): Int {
-        return textSize
-    }
-
-    /**
-     *
-     * Changes the text size for Switch on/off label.
-     *
-     * @param textSize text size for Switch on/off label.
-     */
-    fun setTextSize(textSize: Int) {
-        this.textSize = (textSize * resources.displayMetrics.scaledDensity).toInt()
-        invalidate()
     }
 }
