@@ -4,7 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#00415c">
+
+    <!-- ^ Using different background color to mimic SLID UI -->
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -30,6 +33,12 @@
     <co.sodalabs.view.StyledSwitch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:on="false"
+        app:thumbColorOn="#ffffffff"
+        app:thumbColorOff="#ffffffff"
+        app:colorBorder="#fdfdfd"
+        app:backgroundColorOn="#31657D"
+        app:backgroundColorOff="#00415c"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

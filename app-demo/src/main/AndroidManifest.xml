@@ -36,7 +36,7 @@
 
         <!-- Switch Demo -->
         <activity
-            android:name=".StyledSwitchDemo">
+            android:name=".StyledSwitchViewDemo">
         </activity>
     </application>
 </manifest>

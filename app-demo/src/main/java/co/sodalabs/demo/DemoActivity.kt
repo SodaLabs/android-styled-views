@@ -8,9 +8,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_demo.rvDemoList
+import kotlinx.android.synthetic.main.demo_recycler_view_item.view.tvDescription
+import kotlinx.android.synthetic.main.demo_recycler_view_item.view.tvLabel
 
 data class DemoViewModel(val name: String, val description: String, val intent: Intent)
 
@@ -21,7 +22,7 @@ class DemoActivity : AppCompatActivity() {
     private val demoList by lazy {
         listOf(
             DemoViewModel(getString(R.string.demo_label_recyclerview), getString(R.string.demo_desc_recyclerview), Intent(this, StyledRecyclerViewDemo::class.java)),
-            DemoViewModel(getString(R.string.demo_label_switch), getString(R.string.demo_desc_switch), Intent(this, StyledSwitchDemo::class.java))
+            DemoViewModel(getString(R.string.demo_label_switch), getString(R.string.demo_desc_switch), Intent(this, StyledSwitchViewDemo::class.java))
         )
     }
 
@@ -66,17 +67,16 @@ class DemoAdapter(private val items: List<DemoViewModel>) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
         holder.setOnClickListener(clickListener)
-
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private var clickListener: ((view: View, item: DemoViewModel) -> Unit)? = null
 
-        fun bind(viewModel: DemoViewModel) {
-            itemView.findViewById<TextView>(R.id.tvLabel).text = viewModel.name
-            itemView.findViewById<TextView>(R.id.tvDescription).text = viewModel.description
-            itemView.setOnClickListener { clickListener?.invoke(itemView, viewModel) }
+        fun bind(viewModel: DemoViewModel) = itemView.run {
+            tvLabel.text = viewModel.name
+            tvDescription.text = viewModel.description
+            setOnClickListener { clickListener?.invoke(itemView, viewModel) }
         }
 
         fun setOnClickListener(listener: ((view: View, item: DemoViewModel) -> Unit)?) {
