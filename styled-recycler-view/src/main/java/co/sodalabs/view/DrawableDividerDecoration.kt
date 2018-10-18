@@ -38,7 +38,8 @@ class DrawableDividerDecoration(
                     }
                 }
                 else -> throw IllegalStateException(
-                    "Cannot support ${javaClass.simpleName} for ${layoutManager.javaClass.simpleName}")
+                    "Cannot support ${javaClass.simpleName} for ${layoutManager.javaClass.simpleName}"
+                )
             }
         }
     }
@@ -64,8 +65,10 @@ class DrawableDividerDecoration(
 
         val left = parent.paddingLeft
         val right = parent.width - parent.paddingRight
-        canvas.clipRect(left, parent.paddingTop, right,
-            parent.height - parent.paddingBottom)
+        canvas.clipRect(
+            left, parent.paddingTop,
+            right, parent.height - parent.paddingBottom
+        )
 
         val childCount = parent.childCount
         for (i in 0 until childCount) {
@@ -74,7 +77,8 @@ class DrawableDividerDecoration(
 
             // Beginning
             if (i == 0 &&
-                dividerMode.and(DividerMode.SHOW_DIVIDER_BEGINNING) == DividerMode.SHOW_DIVIDER_BEGINNING) {
+                dividerMode.and(DividerMode.SHOW_DIVIDER_BEGINNING) == DividerMode.SHOW_DIVIDER_BEGINNING
+            ) {
                 val top = bounds.top + Math.round(child.translationY)
                 val bottom = top + dividerDrawable.intrinsicHeight
 
@@ -84,7 +88,8 @@ class DrawableDividerDecoration(
 
             // Middle
             if (i in 0..(childCount - 2) &&
-                dividerMode.and(DividerMode.SHOW_DIVIDER_MIDDLE) == DividerMode.SHOW_DIVIDER_MIDDLE) {
+                dividerMode.and(DividerMode.SHOW_DIVIDER_MIDDLE) == DividerMode.SHOW_DIVIDER_MIDDLE
+            ) {
                 val bottom = bounds.bottom + Math.round(child.translationY)
                 val top = bottom - dividerDrawable.intrinsicHeight
 
@@ -94,7 +99,8 @@ class DrawableDividerDecoration(
 
             // End
             if (i == childCount - 1 &&
-                dividerMode.and(DividerMode.SHOW_DIVIDER_END) == DividerMode.SHOW_DIVIDER_END) {
+                dividerMode.and(DividerMode.SHOW_DIVIDER_END) == DividerMode.SHOW_DIVIDER_END
+            ) {
                 val bottom = bounds.bottom + Math.round(child.translationY)
                 val top = bottom - dividerDrawable.intrinsicHeight
 
@@ -110,6 +116,54 @@ class DrawableDividerDecoration(
         canvas: Canvas,
         parent: RecyclerView
     ) {
-        // TODO
+        canvas.save()
+
+        val top = parent.paddingTop
+        val bottom = parent.height - parent.paddingBottom
+        canvas.clipRect(
+            parent.paddingLeft, top,
+            parent.width - parent.paddingRight, bottom
+        )
+
+        val childCount = parent.childCount
+        for (i in 0 until childCount) {
+            val child = parent.getChildAt(i)
+            parent.getDecoratedBoundsWithMargins(child, bounds)
+
+            // Beginning
+            if (i == 0 &&
+                dividerMode.and(DividerMode.SHOW_DIVIDER_BEGINNING) == DividerMode.SHOW_DIVIDER_BEGINNING
+            ) {
+                val left = bounds.left + Math.round(child.translationX)
+                val right = left + dividerDrawable.intrinsicWidth
+
+                dividerDrawable.setBounds(left, top, right, bottom)
+                dividerDrawable.draw(canvas)
+            }
+
+            // Middle
+            if (i in 0..(childCount - 2) &&
+                dividerMode.and(DividerMode.SHOW_DIVIDER_MIDDLE) == DividerMode.SHOW_DIVIDER_MIDDLE
+            ) {
+                val right = bounds.right + Math.round(child.translationX)
+                val left = right - dividerDrawable.intrinsicWidth
+
+                dividerDrawable.setBounds(left, top, right, bottom)
+                dividerDrawable.draw(canvas)
+            }
+
+            // End
+            if (i == childCount - 1 &&
+                dividerMode.and(DividerMode.SHOW_DIVIDER_END) == DividerMode.SHOW_DIVIDER_END
+            ) {
+                val right = bounds.right + Math.round(child.translationX)
+                val left = right - dividerDrawable.intrinsicWidth
+
+                dividerDrawable.setBounds(left, top, right, bottom)
+                dividerDrawable.draw(canvas)
+            }
+        }
+
+        canvas.restore()
     }
 }
