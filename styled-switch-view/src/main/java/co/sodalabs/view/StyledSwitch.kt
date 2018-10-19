@@ -187,19 +187,19 @@ class StyledSwitch : ToggleableView {
         val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledSwitch, 0, 0)
         for (i in 0 until attributes.indexCount) {
             when (attributes.getIndex(i)) {
-                R.styleable.StyledSwitch_on -> isOn = attributes.getBoolean(R.styleable.StyledSwitch_on, false)
-                R.styleable.StyledSwitch_colorDisabled -> colorDisabled = attributes.getColor(R.styleable.StyledSwitch_colorOff, Color.parseColor("#D3D3D3"))
-                R.styleable.StyledSwitch_textOff -> labelOff = attributes.getString(R.styleable.StyledSwitch_textOff)
-                R.styleable.StyledSwitch_textOn -> labelOn = attributes.getString(R.styleable.StyledSwitch_textOn)
+                R.styleable.StyledSwitch_swOn -> isOn = attributes.getBoolean(R.styleable.StyledSwitch_swOn, false)
+                R.styleable.StyledSwitch_swColorDisabled -> colorDisabled = attributes.getColor(R.styleable.StyledSwitch_swColorOff, Color.parseColor("#D3D3D3"))
+                R.styleable.StyledSwitch_swTextOff -> labelOff = attributes.getString(R.styleable.StyledSwitch_swTextOff)
+                R.styleable.StyledSwitch_swTextOn -> labelOn = attributes.getString(R.styleable.StyledSwitch_swTextOn)
                 R.styleable.StyledSwitch_android_textSize -> textSize = attributes.getDimensionPixelSize(R.styleable.StyledSwitch_android_textSize, 14)
                 R.styleable.StyledSwitch_android_enabled -> mEnabled = attributes.getBoolean(R.styleable.StyledSwitch_android_enabled, false)
-                R.styleable.StyledSwitch_colorBorder -> colorBorder = attributes.getColor(R.styleable.StyledSwitch_colorBorder, ContextCompat.getColor(context, R.color.colorOn))
-                R.styleable.StyledSwitch_colorOn -> colorOn = attributes.getColor(R.styleable.StyledSwitch_colorOn, ContextCompat.getColor(context, R.color.colorOn))
-                R.styleable.StyledSwitch_colorOff -> colorOff = attributes.getColor(R.styleable.StyledSwitch_colorOff, ContextCompat.getColor(context, android.R.color.white))
-                R.styleable.StyledSwitch_backgroundColorOn -> backgroundColorOn = attributes.getColor(R.styleable.StyledSwitch_backgroundColorOn, ContextCompat.getColor(context, R.color.colorOn))
-                R.styleable.StyledSwitch_backgroundColorOff -> backgroundColorOff = attributes.getColor(R.styleable.StyledSwitch_backgroundColorOff, ContextCompat.getColor(context, android.R.color.white))
-                R.styleable.StyledSwitch_thumbColorOn -> thumbColorOn = attributes.getColor(R.styleable.StyledSwitch_thumbColorOn, ContextCompat.getColor(context, R.color.colorOn))
-                R.styleable.StyledSwitch_thumbColorOff -> thumbColorOff = attributes.getColor(R.styleable.StyledSwitch_thumbColorOff, ContextCompat.getColor(context, android.R.color.white))
+                R.styleable.StyledSwitch_swColorBorder -> colorBorder = attributes.getColor(R.styleable.StyledSwitch_swColorBorder, ContextCompat.getColor(context, R.color.colorOn))
+                R.styleable.StyledSwitch_swColorOn -> colorOn = attributes.getColor(R.styleable.StyledSwitch_swColorOn, ContextCompat.getColor(context, R.color.colorOn))
+                R.styleable.StyledSwitch_swColorOff -> colorOff = attributes.getColor(R.styleable.StyledSwitch_swColorOff, ContextCompat.getColor(context, android.R.color.white))
+                R.styleable.StyledSwitch_swBackgroundColorOn -> backgroundColorOn = attributes.getColor(R.styleable.StyledSwitch_swBackgroundColorOn, ContextCompat.getColor(context, R.color.colorOn))
+                R.styleable.StyledSwitch_swBackgroundColorOff -> backgroundColorOff = attributes.getColor(R.styleable.StyledSwitch_swBackgroundColorOff, ContextCompat.getColor(context, android.R.color.white))
+                R.styleable.StyledSwitch_swThumbColorOn -> thumbColorOn = attributes.getColor(R.styleable.StyledSwitch_swThumbColorOn, ContextCompat.getColor(context, R.color.colorOn))
+                R.styleable.StyledSwitch_swThumbColorOff -> thumbColorOff = attributes.getColor(R.styleable.StyledSwitch_swThumbColorOff, ContextCompat.getColor(context, android.R.color.white))
             }
         }
     }

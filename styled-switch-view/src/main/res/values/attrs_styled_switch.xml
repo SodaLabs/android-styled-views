@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="StyledSwitch">
-        <attr name="textOn" format="string" />
-        <attr name="textOff" format="string" />
-        <attr name="backgroundColorOff" format="color" />
-        <attr name="backgroundColorOn" format="color" />
-        <attr name="colorOff" format="color" />
-        <attr name="colorOn" format="color" />
-        <attr name="thumbColorOff" format="color" />
-        <attr name="thumbColorOn" format="color" />
-        <attr name="colorBorder" format="color" />
-        <attr name="colorDisabled" format="color" />
-        <attr name="on" format="boolean" />
+        <attr name="swTextOn" format="string" />
+        <attr name="swTextOff" format="string" />
+        <attr name="swBackgroundColorOff" format="color" />
+        <attr name="swBackgroundColorOn" format="color" />
+        <attr name="swColorOff" format="color" />
+        <attr name="swColorOn" format="color" />
+        <attr name="swThumbColorOff" format="color" />
+        <attr name="swThumbColorOn" format="color" />
+        <attr name="swColorBorder" format="color" />
+        <attr name="swColorDisabled" format="color" />
+        <attr name="swOn" format="boolean" />
         <attr name="android:textSize" />
         <attr name="android:enabled" />
     </declare-styleable>
