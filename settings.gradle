@@ -1,2 +1,3 @@
 include ':app-demo',
-        ':styled-recycler-view'
+        ':styled-recycler-view',
+        ':styled-switch-view'

@@ -4,7 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#00415c">
+
+    <!-- ^ Using different background color to mimic SLID UI -->
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -22,23 +25,22 @@
             android:layout_height="match_parent"
             android:gravity="start|center_vertical"
             android:padding="12dp"
-            android:text="StyledRecyclerView"
+            android:text="StyledSwitch"
             android:textSize="18sp"
             tools:ignore="HardcodedText" />
     </android.support.v7.widget.Toolbar>
 
-    <co.sodalabs.view.StyledRecyclerView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingBottom="30dp"
-        android:paddingTop="30dp"
+    <co.sodalabs.view.StyledSwitch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:swOn="false"
+        app:swThumbColorOn="#ffffffff"
+        app:swThumbColorOff="#ffffffff"
+        app:swColorBorder="#fdfdfd"
+        app:swBackgroundColorOn="#31657D"
+        app:swBackgroundColorOff="#00415c"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:rvDividerDrawable="@drawable/row_item_divider"
-        app:rvDividerMode="beginning|middle|end"
-        tools:itemCount="7"
-        tools:listitem="@layout/recycler_view_item" />
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
