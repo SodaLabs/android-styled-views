@@ -35,7 +35,9 @@ class StyledSwitch : ToggleableView {
     private var labelTextSize: Float = resources.getDimension(R.dimen.styled_switch_default_text_size)
         set(value) {
             field = value
+
             paint.textSize = value
+
             postInvalidate()
         }
 
