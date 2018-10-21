@@ -8,18 +8,10 @@ typealias OnToggleListener = (toggleableView: ToggleableView, isOn: Boolean) -> 
 
 open class ToggleableView : View {
 
-    protected var mWidth: Int = 0
-    protected var mHeight: Int = 0
-
     /**
      * Boolean state of this Switch.
      */
     open var isOn: Boolean = false
-
-    /**
-     * Field to determine whether switch is mEnabled/disabled.
-     */
-    var mEnabled: Boolean = true
 
     /**
      * Listener used to dispatch switch events.

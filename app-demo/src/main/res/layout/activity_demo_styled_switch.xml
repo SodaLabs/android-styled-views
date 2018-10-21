@@ -5,14 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00415c">
+    android:background="#00415C"
+    android:clipChildren="false">
 
     <!-- ^ Using different background color to mimic SLID UI -->
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:background="@android:color/white">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/btClose"
@@ -33,14 +35,20 @@
     <co.sodalabs.view.StyledSwitch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:swOn="false"
-        app:swThumbColorOn="#ffffffff"
-        app:swThumbColorOff="#ffffffff"
-        app:swColorBorder="#fdfdfd"
-        app:swBackgroundColorOn="#31657D"
-        app:swBackgroundColorOff="#00415c"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:swBackgroundColorOff="#00415C"
+        app:swBackgroundColorOn="#33677C"
+        app:swBorderColorOff="#33677C"
+        app:swBorderColorOn="#33677C"
+        app:swBorderWidth="1dp"
+        app:swColorDisabled="#33677C"
+        app:swOn="true"
+        app:swTextColorOff="#D6E0E4"
+        app:swTextColorOn="#D6E0E4"
+        app:swThumbColorOff="#D6E0E4"
+        app:swThumbColorOn="#D6E0E4" />
 </android.support.constraint.ConstraintLayout>
