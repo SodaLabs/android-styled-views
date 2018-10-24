@@ -165,6 +165,7 @@ class StyledSwitch : ToggleableView {
     private var touchStartX: Float = 0f
     private var touchStartTime: Long = 0
     private var touchDragging: Boolean = false
+    private val touchDragSlop: Float by lazy { context.resources.getDimension(R.dimen.styled_switch_move_slop) }
 
     private val alphaOn: Float
         get() {
@@ -441,8 +442,24 @@ class StyledSwitch : ToggleableView {
             }
 
             MotionEvent.ACTION_MOVE -> {
-                if (x - thumbRadii.ushr(1) > padding && x + thumbRadii.ushr(1) < width - padding) {
-                    thumbBounds.set(x - thumbRadii.ushr(1), thumbBounds.top, x + thumbRadii.ushr(1), thumbBounds.bottom)
+                // Detect dragging
+                if (touchDragging.not() && Math.abs(x - touchStartX) >= touchDragSlop) {
+                    touchDragging = true
+                }
+
+                // Move the thumb next to the user touch iff the touch forms a dragging
+                if (touchDragging) {
+                    // Constraint x
+                    val constrainedX = if (x < thumbOffCenterX) {
+                        thumbOffCenterX
+                    } else {
+                        if (x > thumbOnCenterX) {
+                            thumbOnCenterX
+                        } else {
+                            x
+                        }
+                    }
+                    thumbBounds.set(constrainedX - thumbRadius, thumbBounds.top, constrainedX + thumbRadius, thumbBounds.bottom)
                     invalidate()
                 }
                 return true
