@@ -1,0 +1,23 @@
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    bintrayUser = System.getenv('BINTRAY_USER')
+    bintrayKey = System.getenv('BINTRAY_API_KEY')
+
+    repoName = 'android'
+    uploadName = 'styled-slider-view'
+
+    userOrg = 'sodalabs'
+    groupId = 'co.sodalabs'
+    artifactId = project.styled_slider_view_artifact_name
+    publishVersion = project.styled_slider_view_artifact_version
+
+    desc = ''
+
+    dryRun = false
+}
+
+// Avoid Kotlin docs error
+tasks.withType(Javadoc) {
+    enabled = false
+}

@@ -22,7 +22,8 @@ class DemoActivity : AppCompatActivity() {
     private val demoList by lazy {
         listOf(
             DemoViewModel(getString(R.string.demo_label_recyclerview), getString(R.string.demo_desc_recyclerview), Intent(this, StyledRecyclerViewDemo::class.java)),
-            DemoViewModel(getString(R.string.demo_label_switch), getString(R.string.demo_desc_switch), Intent(this, StyledSwitchViewDemo::class.java))
+            DemoViewModel(getString(R.string.demo_label_switch), getString(R.string.demo_desc_switch), Intent(this, StyledSwitchViewDemo::class.java)),
+            DemoViewModel(getString(R.string.demo_styled_slider), getString(R.string.demo_desc_slider), Intent(this, StyledSliderViewDemo::class.java))
         )
     }
 

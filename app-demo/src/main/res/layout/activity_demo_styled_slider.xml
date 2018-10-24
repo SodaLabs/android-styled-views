@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00415c">
+
+    <!-- ^ Using different background color to mimic SLID UI -->
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/btClose"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:padding="12dp"
+            android:text="StyledSliderView"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
+    </android.support.v7.widget.Toolbar>
+
+    <co.sodalabs.view.StyledCompatSliderView
+        android:layout_width="0dp"
+        android:layout_height="@dimen/slider_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:progress="75" />
+</android.support.constraint.ConstraintLayout>

@@ -1,3 +1,5 @@
-include ':app-demo',
+include ':common',
+        ':app-demo',
         ':styled-recycler-view',
-        ':styled-switch-view'
+        ':styled-switch-view',
+        ':styled-slider-view'

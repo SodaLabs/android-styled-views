@@ -19,4 +19,6 @@
     <string name="demo_desc_recyclerview">Demo for custom recycler view which allows for dividers</string>
     <string name="demo_label_switch">Styled Switch Demo</string>
     <string name="demo_desc_switch">Demo for custom switch view which allows for center-inside switch state text</string>
+    <string name="demo_styled_slider">Styled Slider View Demo</string>
+    <string name="demo_desc_slider">Demo for custom slider view with rounded sides and filled background for progress</string>
 </resources>

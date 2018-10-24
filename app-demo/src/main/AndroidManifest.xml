@@ -38,5 +38,10 @@
         <activity
             android:name=".StyledSwitchViewDemo">
         </activity>
+
+        <!-- Slider Demo -->
+        <activity
+            android:name=".StyledSliderViewDemo">
+        </activity>
     </application>
 </manifest>
