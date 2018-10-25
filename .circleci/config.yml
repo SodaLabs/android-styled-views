@@ -31,10 +31,12 @@ jobs:
       - run:
           name: Run unit test
           command: |
-            ./gradlew styled-recycler-view:testDebugUnitTest -PtestProguard=true --stacktrace
+            ./gradlew testDebugUnitTest -PtestProguard=true --stacktrace
 
       - store_test_results:
           path: styled-recycler-view/build/test-results
+      - store_test_results:
+          path: styled-switch-view/build/test-results
 
       - save_cache:
           key: project-{{ checksum "build.gradle" }}-{{ checksum "dependencies.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
@@ -61,25 +63,30 @@ jobs:
       - run:
           name: Run unit test
           command: |
-            ./gradlew styled-recycler-view:testReleaseUnitTest --stacktrace
+            ./gradlew testReleaseUnitTest --stacktrace
 
       - run:
           name: Build artifact
           command: |
-            ./gradlew styled-recycler-view:build --stacktrace
+            ./gradlew build --stacktrace
 
       - run:
           name: Publish to Github
           command: |
-            ./gradlew styled-recycler-view:githubRelease --stacktrace
+            ./gradlew styled-recycler-view:githubRelease --stacktrace 2> /dev/null
+            ./gradlew styled-switch-view:githubRelease --stacktrace 2> /dev/null
 
       - run:
           name: Publish to JCenter
           command: |
-            ./gradlew styled-recycler-view:bintrayUpload --stacktrace
+            ./gradlew styled-recycler-view:bintrayUpload --stacktrace 2> /dev/null
+            ./gradlew styled-switch-view:bintrayUpload --stacktrace 2> /dev/null
 
       - store_artifacts:
           path: styled-recycler-view/build/outputs/aar/
+          destination: aar
+      - store_artifacts:
+          path: styled-switch-view/build/outputs/aar/
           destination: aar
 
 workflows:

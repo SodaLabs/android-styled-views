@@ -22,21 +22,21 @@ if (System.getenv("CI")) {
     def artifact_name = project.styled_switch_view_artifact_name
 
     def log = gitChangelogApiBuilder()
-            .withGitHubToken(System.getenv('GITHUB_API_KEY'))
-            .withFromRef('git describe --abbrev=0 --tags'.execute().text.trim())
-            .withToRef(REF_MASTER)
-            .withTemplatePath("releasenotes.mustache")
-            .withUntaggedName("Version " + artifact_version)
-            .withNoIssueName("Other issues")
-            .render()
+        .withGitHubToken(System.getenv('GITHUB_API_KEY'))
+        .withFromRef('git describe --abbrev=0 --tags'.execute().text.trim())
+        .withToRef(REF_MASTER)
+        .withTemplatePath("${projectDir}/releasenotes.mustache")
+        .withUntaggedName("Styled-Switch-View Ver. ${artifact_version}")
+        .withNoIssueName("Other issues")
+        .render()
 
     github {
         owner = 'SodaLabs'
         repo = 'styled-views-android'
         token = System.getenv('GITHUB_API_KEY')
-        tagName = 'v' + artifact_version
+        tagName = "${artifact_name}-v${artifact_version}"
         targetCommitish = 'master'
-        name = 'Release Version ' + artifact_version
+        name = "Styled-Switch-View Ver. ${artifact_version}"
         body = log
     }
 }
