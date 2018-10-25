@@ -25,7 +25,7 @@ if (System.getenv("CI")) {
         .withGitHubToken(System.getenv('GITHUB_API_KEY'))
         .withFromRef('git describe --abbrev=0 --tags'.execute().text.trim())
         .withToRef(REF_MASTER)
-        .withTemplatePath("${projectDir}/releasenotes.mustache")
+        .withTemplatePath("releasenotes.mustache")
         .withUntaggedName("Styled-Switch-View Ver. ${artifact_version}")
         .withNoIssueName("Other issues")
         .render()
