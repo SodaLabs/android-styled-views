@@ -23,3 +23,12 @@ Therefore we create a custom *RecyclerView* which derives from support library *
 [Check out the document for the integration and usage](styled-recycler-view/README.md).
 
 
+# StyledSwitchView
+
+<p align="center">
+  <img src="docs/sw-capsule-demo.gif" width="240">
+</p>
+
+A capsule styled switch view with customized label, border, background and thumbnail.
+
+[Check out the document for the integration and usage](styled-switch-view/README.md).

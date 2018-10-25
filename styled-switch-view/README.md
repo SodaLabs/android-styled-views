@@ -1,12 +1,12 @@
 ### Gradle Integration
 
 [![CircleCI](https://circleci.com/gh/SodaLabs/styled-views-android.svg?style=svg)](https://circleci.com/gh/SodaLabs/styled-views-android)
-[ ![Download](https://api.bintray.com/packages/sodalabs/android/styled-recycler-view/images/download.svg) ](https://bintray.com/sodalabs/android/styled-recycler-view/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/sodalabs/android/styled-switch-view/images/download.svg) ](https://bintray.com/sodalabs/android/styled-switch-view/_latestVersion)
 
 Add this into your dependencies block.
 
 ```
-implementation 'co.sodalabs:styled-recycler-view:x.x.x'
+implementation 'co.sodalabs:styled-switch-view:x.x.x'
 ```
 
 If you cannot find the package on JCenter, add this to your gradle repository
@@ -19,25 +19,50 @@ maven {
 
 ### Usage
 
-- The attribute `app:rvDividerDrawable` let you assign the divider drawable in XML. It adds the divider to all the three positions by default.
-- The attribute `app:rvDividerMode` let you determine to add the divider at **beginning**, **middle**, or **end**.
+The capsule switch has a minimum size of **72 by 32 dip** and always follows the aspect ratio of 72/32. Here are some sizing cases:
+
+- Given `android:layout_width="wrap_content"` and `android:layout_height="wrap_content"`, it is measured as minimum size.
+- Given other settings, it shrinks down to fit the scale size.
+
+##### Styled attributes
+
+- `app:swOn`: Switch on or off.
+- `app:swTextOn`: The label for on state.
+- `app:swTextOff`: The label for off state.
+- `app:swTextColorOn`: The label color for on state.
+- `app:swTextColorOff`: The label color for off state.
+- `app:swTextSize`: The text size measured in **sp**.
+- `app:swBackgroundColorOn`: The background color for on state.
+- `app:swBackgroundColorOff`: The background color for off state.
+- `app:swThumbColorOn`: The thumbnail color for on state.
+- `app:swThumbColorOff`: The thumbnail color for off state.
+- `app:swBorderColorOn`: The border color for on state.
+- `app:swBorderColorOff`: The border color for off state.
+- `app:swBorderWidth`: The border width measured in **dp**.
+- `app:swColorDisabled`: The general color when it is disabled.
+
+##### Preview
 
 <p align="center">
-  <img src="../docs/rv-divider-modes.png">
+  <img src="../docs/sw-capsule-demo.gif" width="240">
 </p>
 
-> From left to right is **only beginning**, **only middle**, and **only end** accordingly
-
-XML Sample:
+##### XML Sample
 
 ```XML
-<co.sodalabs.view.StyledRecyclerView
+<co.sodalabs.view.StyledSwitch
     ...
-    android:orientation="vertical"
-    app:rvDividerDrawable="@drawable/row_item_divider"
-    app:rvDividerMode="beginning|middle|end"
-    tools:itemCount="7"
-    tools:listitem="@layout/recycler_view_item" />
+    app:swBackgroundColorOff="#00415C"
+    app:swBackgroundColorOn="#33677C"
+    app:swBorderColorOff="#33677C"
+    app:swBorderColorOn="#33677C"
+    app:swBorderWidth="1dp"
+    app:swColorDisabled="#33677C"
+    app:swOn="true"
+    app:swTextColorOff="#D6E0E4"
+    app:swTextColorOn="#D6E0E4"
+    app:swThumbColorOff="#D6E0E4"
+    app:swThumbColorOn="#D6E0E4" />
 ```
 
 
