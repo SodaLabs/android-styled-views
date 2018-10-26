@@ -14,6 +14,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import co.sodalabs.view.sw.R
 
 private fun Float.xOneByte(): Int {
     return (this * 255).toInt()

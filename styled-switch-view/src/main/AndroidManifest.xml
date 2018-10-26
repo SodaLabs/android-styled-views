@@ -1,2 +1,1 @@
-<manifest package="co.sodalabs.view"
-          xmlns:android="http://schemas.android.com/apk/res/android" />
+<manifest package="co.sodalabs.view.sw" />

@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatSeekBar
 import android.util.AttributeSet
+import co.sodalabs.view.slider.R
 
 /**
  * This is a wrapper of [AppCompatSeekBar] which uses "android:seekBarStyle"
@@ -19,7 +20,7 @@ class StyledCompatSliderView : AppCompatSeekBar {
     }
 
     private val paint = Paint()
-    private val thumbBitmap by lazy { context.getBitmapFromVectorDrawable(R.drawable.ic_slider_thumb) }
+    private val thumbBitmap by lazy { context.getBitmapFromVectorDrawable(R.drawable.default_slider_thumb) }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, android.R.attr.seekBarStyle)
@@ -29,7 +30,7 @@ class StyledCompatSliderView : AppCompatSeekBar {
     }
 
     private fun initView() {
-        progressDrawable = ContextCompat.getDrawable(context, R.drawable.slider_progress)
+        progressDrawable = ContextCompat.getDrawable(context, R.drawable.default_slider_progress)
         thumb = null
         paint.color = Color.parseColor("#ccffffff")
     }

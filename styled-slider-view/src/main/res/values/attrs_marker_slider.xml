@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MarkerSlider">
+        <attr name="thumbDrawable" format="reference" />
+        <attr name="trackDrawable" format="reference" />
+        <attr name="markerDrawableMiddle" format="reference" />
+        <attr name="markerDrawableStart" format="reference" />
+        <attr name="markerDrawableEnd" format="reference" />
+        <attr name="markerNum" format="integer" />
+    </declare-styleable>
+</resources>

@@ -5,9 +5,9 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import co.sodalabs.R
 import co.sodalabs.view.StyledRecyclerView.Companion.PREVIEW_LAYOUT_AS_GRID
 import co.sodalabs.view.StyledRecyclerView.Companion.PREVIEW_LAYOUT_AS_LIST
+import co.sodalabs.view.rv.R
 
 /**
  * A custom [RecyclerView] supporting the style attribute [R.styleable.StyledRecyclerView].
