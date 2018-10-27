@@ -19,6 +19,7 @@ import co.sodalabs.view.slider.R
  * @see [R.attr.markerDrawableStart] The marker (tick) drawable at the start.
  * @see [R.attr.markerDrawableEnd] The marker (tick) drawable at the end.
  * @see [R.attr.markerNum] The amount of markers on the track. The markers are distributed evenly spaced.
+ * @see [R.attr.touchDragSlop] A slop where the touch forms a drag if the move distance is over.
  */
 class StyledMarkerSliderView : AppCompatSeekBar {
 
