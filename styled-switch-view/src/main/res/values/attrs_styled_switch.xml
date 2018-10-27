@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="StyledSwitch">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="StyledSwitchView" tools:ignore="MissingDefaultResource">
         <attr name="swOn" format="boolean" />
         <attr name="swTextOn" format="string" />
         <attr name="swTextOff" format="string" />

@@ -48,6 +48,10 @@ dependencies {
     // Kotlin
     api rootProject.ext.dep.kotlinStdlib
     api rootProject.ext.dep.kotlinStdlibJdk7
+
+    // Project's core library
+    implementation project(path: ':common')
+
     // Unit tests.
     testImplementation rootProject.ext.dep.testJunit
     testImplementation rootProject.ext.dep.testMockito

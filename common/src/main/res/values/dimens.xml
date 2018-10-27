@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorOn">#35677F</color>
+    <dimen name="default_touch_drag_slop">4dp</dimen>
 </resources>

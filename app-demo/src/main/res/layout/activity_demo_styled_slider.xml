@@ -46,7 +46,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <co.sodalabs.view.MarkerSlider
+    <co.sodalabs.view.StyledMarkerSliderView
         android:id="@+id/slMarker"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

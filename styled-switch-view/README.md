@@ -50,7 +50,7 @@ The capsule switch has a minimum size of **72 by 32 dip** and always follows the
 ##### XML Sample
 
 ```XML
-<co.sodalabs.view.StyledSwitch
+<co.sodalabs.view.StyledSwitchView
     ...
     app:swBackgroundColorOff="#00415C"
     app:swBackgroundColorOn="#33677C"

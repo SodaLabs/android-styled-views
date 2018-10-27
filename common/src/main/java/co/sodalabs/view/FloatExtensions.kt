@@ -7,3 +7,7 @@ fun Float.toFloorInt(): Int {
 fun Float.toCeilInt(): Int {
     return Math.ceil(this.toDouble()).toInt()
 }
+
+fun Float.xOneByte(): Int {
+    return (this * 255).toInt()
+}

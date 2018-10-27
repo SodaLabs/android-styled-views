@@ -32,7 +32,7 @@
             tools:ignore="HardcodedText" />
     </android.support.v7.widget.Toolbar>
 
-    <co.sodalabs.view.StyledSwitch
+    <co.sodalabs.view.StyledSwitchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
@@ -50,5 +50,6 @@
         app:swTextColorOff="#D6E0E4"
         app:swTextColorOn="#D6E0E4"
         app:swThumbColorOff="#D6E0E4"
-        app:swThumbColorOn="#D6E0E4" />
+        app:swThumbColorOn="#D6E0E4"
+        app:touchDragSlop="2dp" />
 </android.support.constraint.ConstraintLayout>

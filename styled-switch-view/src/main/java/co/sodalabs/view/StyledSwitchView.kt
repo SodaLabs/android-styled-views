@@ -16,12 +16,8 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import co.sodalabs.view.sw.R
 
-private fun Float.xOneByte(): Int {
-    return (this * 255).toInt()
-}
-
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class StyledSwitch : ToggleableView {
+class StyledSwitchView : ToggleableView {
 
     private var thumbRadius: Float = 0f
 
@@ -168,7 +164,7 @@ class StyledSwitch : ToggleableView {
     private var touchStartX: Float = 0f
     private var touchStartTime: Long = 0
     private var touchDragging: Boolean = false
-    private val touchDragSlop: Float by lazy { context.resources.getDimension(R.dimen.styled_switch_move_slop) }
+    private var touchDragSlop: Float = context.resources.getDimension(co.sodalabs.view.R.dimen.default_touch_drag_slop)
 
     private val alphaOn: Float
         get() {
@@ -200,28 +196,39 @@ class StyledSwitch : ToggleableView {
         paint.strokeJoin = Paint.Join.MITER
     }
 
-    private fun initProperties(attrs: AttributeSet?) {
-        val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledSwitch, 0, 0)
+    private fun initCommonProperties(attrs: AttributeSet?) {
+        val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledViewCommon, 0, 0)
         for (i in 0 until attributes.indexCount) {
             when (attributes.getIndex(i)) {
-                R.styleable.StyledSwitch_swOn -> isOn = attributes.getBoolean(R.styleable.StyledSwitch_swOn, false)
-                R.styleable.StyledSwitch_swColorDisabled -> colorDisabled = attributes.getColor(R.styleable.StyledSwitch_swColorDisabled,
+                R.styleable.StyledViewCommon_touchDragSlop -> touchDragSlop = attributes.getDimension(R.styleable.StyledViewCommon_touchDragSlop, touchDragSlop)
+            }
+        }
+        attributes.recycle()
+    }
+
+    private fun initProperties(attrs: AttributeSet?) {
+        val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledSwitchView, 0, 0)
+        for (i in 0 until attributes.indexCount) {
+            when (attributes.getIndex(i)) {
+                R.styleable.StyledSwitchView_swOn -> isOn = attributes.getBoolean(R.styleable.StyledSwitchView_swOn, false)
+                R.styleable.StyledSwitchView_swColorDisabled -> colorDisabled = attributes.getColor(R.styleable.StyledSwitchView_swColorDisabled,
                     Color.parseColor("#D3D3D3"))
-                R.styleable.StyledSwitch_swTextOn -> labelOn = attributes.getString(R.styleable.StyledSwitch_swTextOn)
-                R.styleable.StyledSwitch_swTextOff -> labelOff = attributes.getString(R.styleable.StyledSwitch_swTextOff)
-                R.styleable.StyledSwitch_swTextColorOn -> labelColorOn = attributes.getColor(R.styleable.StyledSwitch_swTextColorOn, labelColorOn)
-                R.styleable.StyledSwitch_swTextColorOff -> labelColorOff = attributes.getColor(R.styleable.StyledSwitch_swTextColorOff, labelColorOff)
-                R.styleable.StyledSwitch_swTextSize -> labelTextSize = attributes.getDimension(R.styleable.StyledSwitch_swTextSize, labelTextSize)
-                R.styleable.StyledSwitch_swBorderColorOn -> borderColorOn = attributes.getColor(R.styleable.StyledSwitch_swBorderColorOn, borderColorOn)
-                R.styleable.StyledSwitch_swBorderColorOff -> borderColorOff = attributes.getColor(R.styleable.StyledSwitch_swBorderColorOff, borderColorOff)
-                R.styleable.StyledSwitch_swBorderWidth -> borderWidth = attributes.getDimension(R.styleable.StyledSwitch_swBorderWidth,
+                R.styleable.StyledSwitchView_swTextOn -> labelOn = attributes.getString(R.styleable.StyledSwitchView_swTextOn)
+                R.styleable.StyledSwitchView_swTextOff -> labelOff = attributes.getString(R.styleable.StyledSwitchView_swTextOff)
+                R.styleable.StyledSwitchView_swTextColorOn -> labelColorOn = attributes.getColor(R.styleable.StyledSwitchView_swTextColorOn, labelColorOn)
+                R.styleable.StyledSwitchView_swTextColorOff -> labelColorOff = attributes.getColor(R.styleable.StyledSwitchView_swTextColorOff, labelColorOff)
+                R.styleable.StyledSwitchView_swTextSize -> labelTextSize = attributes.getDimension(R.styleable.StyledSwitchView_swTextSize, labelTextSize)
+                R.styleable.StyledSwitchView_swBorderColorOn -> borderColorOn = attributes.getColor(R.styleable.StyledSwitchView_swBorderColorOn, borderColorOn)
+                R.styleable.StyledSwitchView_swBorderColorOff -> borderColorOff = attributes.getColor(R.styleable.StyledSwitchView_swBorderColorOff,
+                    borderColorOff)
+                R.styleable.StyledSwitchView_swBorderWidth -> borderWidth = attributes.getDimension(R.styleable.StyledSwitchView_swBorderWidth,
                     borderWidth)
-                R.styleable.StyledSwitch_swBackgroundColorOn -> backgroundColorOn = attributes.getColor(R.styleable.StyledSwitch_swBackgroundColorOn,
+                R.styleable.StyledSwitchView_swBackgroundColorOn -> backgroundColorOn = attributes.getColor(R.styleable.StyledSwitchView_swBackgroundColorOn,
                     backgroundColorOn)
-                R.styleable.StyledSwitch_swBackgroundColorOff -> backgroundColorOff = attributes.getColor(R.styleable.StyledSwitch_swBackgroundColorOff,
+                R.styleable.StyledSwitchView_swBackgroundColorOff -> backgroundColorOff = attributes.getColor(R.styleable.StyledSwitchView_swBackgroundColorOff,
                     backgroundColorOff)
-                R.styleable.StyledSwitch_swThumbColorOn -> thumbColorOn = attributes.getColor(R.styleable.StyledSwitch_swThumbColorOn, thumbColorOn)
-                R.styleable.StyledSwitch_swThumbColorOff -> thumbColorOff = attributes.getColor(R.styleable.StyledSwitch_swThumbColorOff, thumbColorOff)
+                R.styleable.StyledSwitchView_swThumbColorOn -> thumbColorOn = attributes.getColor(R.styleable.StyledSwitchView_swThumbColorOn, thumbColorOn)
+                R.styleable.StyledSwitchView_swThumbColorOff -> thumbColorOff = attributes.getColor(R.styleable.StyledSwitchView_swThumbColorOff, thumbColorOff)
             }
         }
         attributes.recycle()
