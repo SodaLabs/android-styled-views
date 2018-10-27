@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatSeekBar
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.animation.AccelerateDecelerateInterpolator
 import co.sodalabs.view.slider.R
 
 /**
@@ -77,6 +78,12 @@ class StyledMarkerSliderView : AppCompatSeekBar {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        // By default determinate
+        isIndeterminate = false
+
+        // Force original thumb null
+        thumb = null
+
         initCommonProperties(attrs)
         initProperties(attrs)
     }
@@ -100,8 +107,6 @@ class StyledMarkerSliderView : AppCompatSeekBar {
             attrs,
             R.styleable.StyledMarkerSliderView, 0, 0)
 
-        // Force original thumb null
-        thumb = null
         thumbDrawable = ContextCompat.getDrawable(context, R.drawable.default_marker_slider_thumb)
         // Override the track drawable
         progressDrawable = ContextCompat.getDrawable(context, R.drawable.default_marker_slider_track)
@@ -165,13 +170,15 @@ class StyledMarkerSliderView : AppCompatSeekBar {
     }
 
     private fun drawMarker(canvas: Canvas) {
+        val viewHeight = height.toFloat()
+
         canvas.runSafely {
-            translate(thumbStartX, height / 2f)
+            translate(thumbStartX, viewHeight / 2f)
             for (i in 0 until markerNum) {
                 when (i) {
-                    0 -> markerDrawableStart?.draw(canvas)
-                    markerNum - 1 -> markerDrawableEnd?.draw(canvas)
-                    else -> markerDrawableMiddle?.draw(canvas)
+                    0 -> markerDrawableStart?.draw(this)
+                    markerNum - 1 -> markerDrawableEnd?.draw(this)
+                    else -> markerDrawableMiddle?.draw(this)
                 }
 
                 translate(markerDistance, 0f)
@@ -180,11 +187,12 @@ class StyledMarkerSliderView : AppCompatSeekBar {
     }
 
     private fun drawThumb(canvas: Canvas) {
+        val viewHeight = height.toFloat()
         val progress = this.progress.toFloat() / 100f
         val thumbX = progress * thumbEndX + (1f - progress) * thumbStartX
 
         canvas.runSafely {
-            translate(thumbX, height / 2f)
+            translate(thumbX, viewHeight / 2f)
             thumbDrawable?.draw(canvas)
         }
     }
@@ -259,6 +267,7 @@ class StyledMarkerSliderView : AppCompatSeekBar {
         thumbAnimator?.addUpdateListener { animator ->
             progress = animator.animatedValue as Int
         }
+        thumbAnimator?.interpolator = AccelerateDecelerateInterpolator()
         thumbAnimator?.duration = (450 * (Math.abs(currentProgress - nextProgress) / 100f)).toLong()
         thumbAnimator?.start()
     }
