@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="StyledMarkerSliderView">
+    <declare-styleable name="StyledSliderView">
         <attr name="thumbDrawable" format="reference" />
-        <attr name="trackDrawable" format="reference" />
+        <attr name="trackBackgroundDrawable" format="reference" />
+        <attr name="trackForegroundDrawable" format="reference" />
         <attr name="markerDrawableMiddle" format="reference" />
         <attr name="markerDrawableStart" format="reference" />
         <attr name="markerDrawableEnd" format="reference" />

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00415c">
+    android:background="@color/pink">
 
     <!-- ^ Using different background color to mimic Nimble UI -->
 
@@ -31,27 +31,30 @@
             tools:ignore="HardcodedText" />
     </android.support.v7.widget.Toolbar>
 
-    <co.sodalabs.view.StyledCompatSliderView
+    <co.sodalabs.view.StyledCutThumbSliderView
         android:id="@+id/slNormal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:minHeight="@dimen/slider_min_height"
         android:paddingBottom="30dp"
         android:paddingTop="30dp"
-        android:progress="75"
+        android:progress="50"
         app:layout_constraintBottom_toTopOf="@+id/slMarker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:thumbDrawable="@drawable/default_slider_thumb"
+        app:trackBackgroundDrawable="@drawable/default_slider_background_track"
+        app:trackForegroundDrawable="@drawable/default_slider_foreground_track" />
 
     <co.sodalabs.view.StyledMarkerSliderView
         android:id="@+id/slMarker"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:minHeight="@dimen/slider_min_height"
         android:paddingBottom="30dp"
         android:paddingTop="30dp"
@@ -64,6 +67,6 @@
         app:markerDrawableMiddle="@drawable/default_marker_slider_marker_middle"
         app:markerDrawableStart="@drawable/default_marker_slider_marker_start"
         app:markerNum="5"
-        app:thumbDrawable="@drawable/default_marker_slider_thumb"
-        app:trackDrawable="@drawable/default_marker_slider_track" />
+        app:thumbDrawable="@drawable/default_slider_thumb"
+        app:trackBackgroundDrawable="@drawable/default_slider_background_track" />
 </android.support.constraint.ConstraintLayout>

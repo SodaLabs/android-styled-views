@@ -5,53 +5,33 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatSeekBar
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.SeekBar
 import co.sodalabs.view.slider.R
 
 /**
  * A capsule track styled slider with flexible styled markers.
  *
  * @see [R.attr.thumbDrawable] The thumb drawable.
- * @see [R.attr.trackDrawable] The track (a.k.a progress, but only the background part) drawable.
+ * @see [R.attr.trackBackgroundDrawable] The track (a.k.a progress, but only the background part) drawable.
  * @see [R.attr.markerDrawableMiddle] The marker (tick) drawable in the middle.
  * @see [R.attr.markerDrawableStart] The marker (tick) drawable at the start.
  * @see [R.attr.markerDrawableEnd] The marker (tick) drawable at the end.
  * @see [R.attr.markerNum] The amount of markers on the track. The markers are distributed evenly spaced.
  * @see [R.attr.touchDragSlop] A slop where the touch forms a drag if the move distance is over.
  */
-class StyledMarkerSliderView : AppCompatSeekBar {
+open class StyledMarkerSliderView : StyledBaseSliderView {
 
     private var markerNum = 5
+        set(value) {
+            field = value
+            onUpdateMarkerProperties()
+        }
 
     // Thumb
-    private var thumbDrawable: Drawable? = null
-        set(value) {
-            value?.determineSelfCenterBound()
-            field = value
-        }
-    private var thumbHalfWidth: Float = 0f
-    /**
-     * The starting x of the thumb (align with the center of the thumb)
-     */
-    private var thumbStartX: Float = 0f
-    /**
-     * The ending x of the thumb (align with the center of the thumb)
-     */
-    private var thumbEndX: Float = 0f
     private var thumbAnimator: ValueAnimator? = null
-
-    // Track
-    private var trackDrawable: Drawable?
-        set(value) {
-            // The setter will take care of the padding
-            progressDrawable = value
-        }
-        get() {
-            return progressDrawable
-        }
 
     // Marker
     private var markerDrawableMiddle: Drawable? = null
@@ -71,10 +51,6 @@ class StyledMarkerSliderView : AppCompatSeekBar {
         }
     private var markerDistance: Float = 0f
 
-    private var touchStartX: Float = 0f
-    private var touchDragging: Boolean = false
-    private var touchDragSlop: Float = context.resources.getDimension(co.sodalabs.view.R.dimen.default_touch_drag_slop)
-
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
@@ -83,6 +59,8 @@ class StyledMarkerSliderView : AppCompatSeekBar {
 
         // Force original thumb null
         thumb = null
+        // Force foreground track null
+        trackForegroundDrawable = null
 
         initCommonProperties(attrs)
         initProperties(attrs)
@@ -105,11 +83,11 @@ class StyledMarkerSliderView : AppCompatSeekBar {
     private fun initProperties(attrs: AttributeSet?) {
         val typedArray = context.theme.obtainStyledAttributes(
             attrs,
-            R.styleable.StyledMarkerSliderView, 0, 0)
+            R.styleable.StyledSliderView, 0, 0)
 
-        thumbDrawable = ContextCompat.getDrawable(context, R.drawable.default_marker_slider_thumb)
+        thumbDrawable = ContextCompat.getDrawable(context, R.drawable.default_slider_thumb)
         // Override the track drawable
-        progressDrawable = ContextCompat.getDrawable(context, R.drawable.default_marker_slider_track)
+        trackBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.default_slider_background_track)
         // Marker
         markerDrawableMiddle = ContextCompat.getDrawable(context, R.drawable.default_marker_slider_marker_middle)
         markerDrawableStart = ContextCompat.getDrawable(context, R.drawable.default_marker_slider_marker_start)
@@ -117,17 +95,13 @@ class StyledMarkerSliderView : AppCompatSeekBar {
 
         for (i in 0 until typedArray.indexCount) {
             when (typedArray.getIndex(i)) {
-                R.styleable.StyledMarkerSliderView_thumbDrawable -> thumbDrawable = typedArray.getCompatDrawable(context,
-                    R.styleable.StyledMarkerSliderView_thumbDrawable)
-                R.styleable.StyledMarkerSliderView_trackDrawable -> trackDrawable = typedArray.getCompatDrawable(context,
-                    R.styleable.StyledMarkerSliderView_trackDrawable)
-                R.styleable.StyledMarkerSliderView_markerNum -> markerNum = typedArray.getInt(R.styleable.StyledMarkerSliderView_markerNum, markerNum)
-                R.styleable.StyledMarkerSliderView_markerDrawableMiddle -> markerDrawableMiddle = typedArray.getCompatDrawable(context,
-                    R.styleable.StyledMarkerSliderView_markerDrawableMiddle)
-                R.styleable.StyledMarkerSliderView_markerDrawableStart -> markerDrawableStart = typedArray.getCompatDrawable(context,
-                    R.styleable.StyledMarkerSliderView_markerDrawableStart)
-                R.styleable.StyledMarkerSliderView_markerDrawableEnd -> markerDrawableEnd = typedArray.getCompatDrawable(context,
-                    R.styleable.StyledMarkerSliderView_markerDrawableEnd)
+                R.styleable.StyledSliderView_markerNum -> markerNum = typedArray.getInt(R.styleable.StyledSliderView_markerNum, markerNum)
+                R.styleable.StyledSliderView_markerDrawableMiddle -> markerDrawableMiddle = typedArray.getCompatDrawable(context,
+                    R.styleable.StyledSliderView_markerDrawableMiddle)
+                R.styleable.StyledSliderView_markerDrawableStart -> markerDrawableStart = typedArray.getCompatDrawable(context,
+                    R.styleable.StyledSliderView_markerDrawableStart)
+                R.styleable.StyledSliderView_markerDrawableEnd -> markerDrawableEnd = typedArray.getCompatDrawable(context,
+                    R.styleable.StyledSliderView_markerDrawableEnd)
             }
         }
 
@@ -144,15 +118,30 @@ class StyledMarkerSliderView : AppCompatSeekBar {
         super.onLayout(changed, left, top, right, bottom)
 
         if (changed) {
-            thumbHalfWidth = (thumbDrawable?.intrinsicWidth?.toFloat() ?: 0f) / 2f
-            thumbStartX = paddingLeft + thumbHalfWidth
-            thumbEndX = width - paddingRight - thumbHalfWidth
+            onUpdateMarkerProperties()
+        }
+    }
 
-            markerDistance = if (markerNum > 1) {
-                (thumbEndX - thumbStartX) / (markerNum - 1)
-            } else {
-                0f
-            }
+    override fun onThumbDrawableChanged() {
+        if (width == 0 || height == 0) return
+
+        // IMPORTANT: Make the origin the center of the bound
+        thumbDrawable?.determineSelfCenterBound()
+
+        // IMPORTANT: The center bound simplify the later rendering. Because of
+        // that, we shrink the drawing range
+        val thumbHalfWidth = (thumbDrawable?.intrinsicWidth?.toFloat() ?: 0f) / 2f
+        thumbStartX = paddingLeft + thumbHalfWidth
+        thumbEndX = width - paddingRight - thumbHalfWidth
+    }
+
+    protected open fun onUpdateMarkerProperties() {
+        if (width == 0 || height == 0) return
+
+        markerDistance = if (markerNum > 1) {
+            (thumbEndX - thumbStartX) / (markerNum - 1)
+        } else {
+            0f
         }
     }
 
@@ -162,10 +151,14 @@ class StyledMarkerSliderView : AppCompatSeekBar {
         drawThumb(canvas)
     }
 
-    private fun drawTrack(canvas: Canvas) {
+    override fun drawThumb(canvas: Canvas) {
+        val viewHeight = height.toFloat()
+        val progressFloat = this.progress.toFloat() / 100f
+        val thumbX = progressFloat * thumbEndX + (1f - progressFloat) * thumbStartX
+
         canvas.runSafely {
-            translate(paddingLeft.toFloat(), paddingTop.toFloat())
-            progressDrawable.draw(canvas)
+            translate(thumbX, viewHeight / 2f)
+            thumbDrawable?.draw(canvas)
         }
     }
 
@@ -186,17 +179,6 @@ class StyledMarkerSliderView : AppCompatSeekBar {
         }
     }
 
-    private fun drawThumb(canvas: Canvas) {
-        val viewHeight = height.toFloat()
-        val progress = this.progress.toFloat() / 100f
-        val thumbX = progress * thumbEndX + (1f - progress) * thumbStartX
-
-        canvas.runSafely {
-            translate(thumbX, viewHeight / 2f)
-            thumbDrawable?.draw(canvas)
-        }
-    }
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isEnabled) {
             return false
@@ -210,19 +192,14 @@ class StyledMarkerSliderView : AppCompatSeekBar {
 
             MotionEvent.ACTION_MOVE -> {
                 if (!touchDragging) {
-                    touchDragging = Math.abs(event.x - touchStartX) > touchDragSlop
+                    touchDragging = isTouchDrag(event.x)
                 }
 
                 if (touchDragging) {
-                    val x = if (event.x < thumbStartX) {
-                        thumbStartX
-                    } else {
-                        if (event.x > thumbEndX) {
-                            thumbEndX
-                        } else {
-                            event.x
-                        }
-                    }
+                    val x = constraintTouchX(
+                        touchX = event.x,
+                        from = thumbStartX,
+                        to = thumbEndX)
 
                     progress = positionToIntProgress(x)
                 }
@@ -234,7 +211,13 @@ class StyledMarkerSliderView : AppCompatSeekBar {
             MotionEvent.ACTION_UP -> {
                 touchDragging = false
 
-                snapToClosestMarkerSmoothly(event.x)
+                val (closestX, closestIndex) = findClosestMarkerXAndIndex(event.x)
+                snapToClosestMarkerSmoothly(closestX)
+
+                // Dispatch callback
+                progressDelegateListener.onMarkerLevelUpdated(
+                    seekBar = this,
+                    markerLevel = closestIndex)
 
                 return true
             }
@@ -243,22 +226,24 @@ class StyledMarkerSliderView : AppCompatSeekBar {
         }
     }
 
-    private fun positionToIntProgress(thumbX: Float): Int {
-        return Math.round(100f * (thumbX - thumbStartX) / (thumbEndX - thumbStartX))
-    }
-
-    private fun snapToClosestMarkerSmoothly(touchX: Float) {
+    private fun findClosestMarkerXAndIndex(touchX: Float): Pair<Float, Int> {
         var closestX = thumbStartX
+        var closestIndex = 0
         var closestDistance = Math.abs(touchX - closestX)
         for (i in 1 until markerNum) {
             val markerX = thumbStartX + i * markerDistance
             val distance = Math.abs(touchX - markerX)
             if (distance < closestDistance) {
                 closestX = markerX
+                closestIndex = i
                 closestDistance = distance
             }
         }
 
+        return Pair(closestX, closestIndex)
+    }
+
+    private fun snapToClosestMarkerSmoothly(closestX: Float) {
         val currentProgress = progress
         val nextProgress = positionToIntProgress(closestX)
 
@@ -270,5 +255,45 @@ class StyledMarkerSliderView : AppCompatSeekBar {
         thumbAnimator?.interpolator = AccelerateDecelerateInterpolator()
         thumbAnimator?.duration = (450 * (Math.abs(currentProgress - nextProgress) / 100f)).toLong()
         thumbAnimator?.start()
+    }
+
+    /**
+     * A wrapper listener dispatching [IStyledSliderListener] callbacks.
+     */
+    private val progressDelegateListener = WrapperListener()
+
+    /**
+     * Redirect the given [SeekBar.OnSeekBarChangeListener] to [progressDelegateListener].
+     */
+    override fun setOnSeekBarChangeListener(l: OnSeekBarChangeListener?) {
+        progressDelegateListener.actualListener = l
+        super.setOnSeekBarChangeListener(if (l != null) progressDelegateListener else null)
+    }
+
+    /**
+     * The [IStyledSliderListener] wrapper class.
+     */
+    private class WrapperListener(
+        var actualListener: SeekBar.OnSeekBarChangeListener? = null
+    ) : IStyledSliderListener {
+
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            actualListener?.onProgressChanged(seekBar, progress, fromUser)
+        }
+
+        override fun onMarkerLevelUpdated(seekBar: SeekBar, markerLevel: Int) {
+            val actual = actualListener
+            if (actual is IStyledSliderListener) {
+                actual.onMarkerLevelUpdated(seekBar, 0)
+            }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar) {
+            actualListener?.onStartTrackingTouch(seekBar)
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar) {
+            actualListener?.onStopTrackingTouch(seekBar)
+        }
     }
 }
