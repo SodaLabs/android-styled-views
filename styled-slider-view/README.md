@@ -17,9 +17,35 @@ maven {
 }
 ```
 
-### StyledCompatSliderView
+### StyledCutThumbSliderView
 
-*Constructing the document...*
+A slider that the thumb is cut by the shape of the track.
+
+##### Styled attributes
+
+- `app:thumbDrawable`: The thumb drawable.
+- `app:trackForegroundDrawable`: The foreground track drawable.
+- `app:trackBackgroundDrawable`: The track (a.k.a progress, but only the background part) drawable.
+- `app:touchDragSlop`: A slop where the touch forms a drag if the move distance is over.
+
+##### Preview
+
+<p align="center">
+  <img src="../docs/sl-cut-thumb-demo.gif" width="380">
+</p>
+
+##### XML Sample
+
+```XML
+<co.sodalabs.view.StyledCutThumbSliderView
+    ...
+    android:progress="50"
+    app:thumbDrawable="@drawable/default_slider_thumb"
+    app:trackBackgroundDrawable="@drawable/default_slider_background_track"
+    app:trackForegroundDrawable="@drawable/default_slider_foreground_track" />
+```
+
+---
 
 ### StyledMarkerView
 
@@ -30,7 +56,7 @@ A discrete slider with drawable marker customization.
 ##### Styled attributes
 
 - `app:thumbDrawable`: The thumb drawable.
-- `app:trackDrawable`: The track (a.k.a progress, but only the background part) drawable.
+- `app:trackBackgroundDrawable`: The track (a.k.a progress, but only the background part) drawable.
 - `app:markerDrawableMiddle`: The marker (tick) drawable in the middle.
 - `app:markerDrawableStart`: The marker (tick) drawable at the start.
 - `app:markerDrawableEnd`: The marker (tick) drawable at the end.
@@ -49,16 +75,12 @@ A discrete slider with drawable marker customization.
 <co.sodalabs.view.StyledMarkerSliderView
     ...
     android:progress="50"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/slNormal"
     app:markerDrawableEnd="@drawable/default_marker_slider_marker_end"
     app:markerDrawableMiddle="@drawable/default_marker_slider_marker_middle"
     app:markerDrawableStart="@drawable/default_marker_slider_marker_start"
     app:markerNum="5"
-    app:thumbDrawable="@drawable/default_marker_slider_thumb"
-    app:trackDrawable="@drawable/default_marker_slider_track" />
+    app:thumbDrawable="@drawable/default_slider_thumb"
+    app:trackBackgroundDrawable="@drawable/default_slider_foreground_track" />
 ```
 
 

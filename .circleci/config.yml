@@ -75,18 +75,23 @@ jobs:
           command: |
             ./gradlew styled-recycler-view:githubRelease --stacktrace 2> /dev/null
             ./gradlew styled-switch-view:githubRelease --stacktrace 2> /dev/null
+            ./gradlew styled-slider-view:githubRelease --stacktrace 2> /dev/null
 
       - run:
           name: Publish to JCenter
           command: |
             ./gradlew styled-recycler-view:bintrayUpload --stacktrace 2> /dev/null
             ./gradlew styled-switch-view:bintrayUpload --stacktrace 2> /dev/null
+            ./gradlew styled-slider-view:bintrayUpload --stacktrace 2> /dev/null
 
       - store_artifacts:
           path: styled-recycler-view/build/outputs/aar/
           destination: aar
       - store_artifacts:
           path: styled-switch-view/build/outputs/aar/
+          destination: aar
+      - store_artifacts:
+          path: styled-slider-view/build/outputs/aar/
           destination: aar
 
 workflows:

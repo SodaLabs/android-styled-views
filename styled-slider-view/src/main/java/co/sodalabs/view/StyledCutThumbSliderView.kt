@@ -7,13 +7,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import android.support.v7.widget.AppCompatSeekBar
 import android.util.AttributeSet
 import co.sodalabs.view.slider.R
 
 /**
- * This is a wrapper of [AppCompatSeekBar] which uses "android:seekBarStyle"
- * style attribute by default and this enable us the hot-theme function.
+ * A capsule track slider.
  *
  * @see [R.attr.thumbDrawable] The thumb drawable.
  * @see [R.attr.trackForegroundDrawable] The foreground track drawable.

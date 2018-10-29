@@ -1,12 +1,13 @@
-Styled Views
-===
+# Styled Views
 
 A collections of styled views.
 
-# StyledRecyclerView
+
+
+## Styled RecyclerView
 
 <p align="center">
-  <img src="docs/rv-divider-all.png">
+  <img src="docs/rv-divider-all.png" width="320">
 </p>
 
 The RecyclerView supports [addItemDecoration](https://developer.android.com/reference/android/support/v7/widget/RecyclerView#addItemDecoration%28android.support.v7.widget.RecyclerView.ItemDecoration%29) method since 22.1.0 and many people use this method to programmatically add a line divider. As a group of visual developers, we prefer **WYSIWYG**.
@@ -23,7 +24,8 @@ Therefore we create a custom *RecyclerView* which derives from support library *
 [Check out the document for the integration and usage](styled-recycler-view/README.md).
 
 
-# StyledSwitchView
+
+## Styled Switch View
 
 <p align="center">
   <img src="docs/sw-capsule-demo.gif" width="240">
@@ -32,3 +34,18 @@ Therefore we create a custom *RecyclerView* which derives from support library *
 A capsule styled switch view with customized label, border, background and thumbnail.
 
 [Check out the document for the integration and usage](styled-switch-view/README.md).
+
+
+
+## Styled Slider View
+
+<p align="center">
+  <img src="docs/sl-cut-thumb-demo.gif" width="480">
+</p>
+<p align="center">
+  <img src="docs/sl-marker-demo.gif" width="480">
+</p>
+
+A collection of styled slider view.
+
+[Check out the document for the integration and usage](styled-slider-view/README.md).
