@@ -1,5 +1,5 @@
-include ':common',
-        ':app-demo',
-        ':styled-recycler-view',
-        ':styled-switch-view',
-        ':styled-slider-view'
+include ':app-demo',
+    ':styled-core',
+    ':styled-recycler-view',
+    ':styled-switch-view',
+    ':styled-slider-view'

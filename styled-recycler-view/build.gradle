@@ -2,10 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-// Factory DSL
-apply from: 'artifact.gradle'
-apply from: 'factory.gradle'
-
 // Gradle doc:
 // http://google.github.io/android-gradle-dsl/
 android {

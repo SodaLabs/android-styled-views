@@ -9,7 +9,7 @@ publish {
 
     userOrg = 'sodalabs'
     groupId = 'co.sodalabs'
-    artifactId = project.styled_slider_view_artifact_name
+    artifactId = project.name
     publishVersion = project.styled_slider_view_artifact_version
 
     desc = ''

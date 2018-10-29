@@ -2,10 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-// Factory DSL
-apply from: 'artifact.gradle'
-apply from: 'factory.gradle'
-
 // Gradle doc:
 // http://google.github.io/android-gradle-dsl/
 android {
@@ -44,13 +40,12 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     // Support library
     api rootProject.ext.dep.supportAppcompatV7
-    api rootProject.ext.dep.supportRecyclerViewV7
     // Kotlin
     api rootProject.ext.dep.kotlinStdlib
     api rootProject.ext.dep.kotlinStdlibJdk7
 
     // Project's core library
-    implementation project(path: ':common')
+    api project(path: ':styled-core')
 
     // Unit tests.
     testImplementation rootProject.ext.dep.testJunit

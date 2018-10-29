@@ -5,12 +5,12 @@ publish {
     bintrayKey = System.getenv('BINTRAY_API_KEY')
 
     repoName = 'android'
-    uploadName = 'styled-switch-view'
+    uploadName = 'styled-core'
 
     userOrg = 'sodalabs'
     groupId = 'co.sodalabs'
     artifactId = project.name
-    publishVersion = project.styled_switch_view_artifact_version
+    publishVersion = project.styled_core_artifact_version
 
     desc = ''
 

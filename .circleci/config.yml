@@ -21,7 +21,7 @@ jobs:
 
       - run:
           name: Download dependencies
-          command: ./gradlew androidDependencies --stacktrace
+          command: ./gradlew androidDependencies --no-daemon --stacktrace
 
       - save_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum "dependencies.gradle" }}
@@ -31,12 +31,14 @@ jobs:
       - run:
           name: Run unit test
           command: |
-            ./gradlew testDebugUnitTest -PtestProguard=true --stacktrace
+            ./gradlew testDebugUnitTest -PtestProguard=true --no-daemon --stacktrace
 
       - store_test_results:
           path: styled-recycler-view/build/test-results
       - store_test_results:
           path: styled-switch-view/build/test-results
+      - store_test_results:
+          path: styled-slider-view/build/test-results
 
       - save_cache:
           key: project-{{ checksum "build.gradle" }}-{{ checksum "dependencies.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
@@ -58,31 +60,31 @@ jobs:
 
       - run:
           name: Download dependencies
-          command: ./gradlew androidDependencies --stacktrace
+          command: ./gradlew androidDependencies --no-daemon --stacktrace
 
       - run:
           name: Run unit test
           command: |
-            ./gradlew testReleaseUnitTest --stacktrace
+            ./gradlew testReleaseUnitTest --no-daemon --stacktrace
 
       - run:
-          name: Build artifact
+          name: Build extension
           command: |
-            ./gradlew build --stacktrace
+            ./gradlew build --no-daemon --stacktrace
 
-      - run:
-          name: Publish to Github
-          command: |
-            ./gradlew styled-recycler-view:githubRelease --stacktrace 2> /dev/null
-            ./gradlew styled-switch-view:githubRelease --stacktrace 2> /dev/null
-            ./gradlew styled-slider-view:githubRelease --stacktrace 2> /dev/null
+#      - run:
+#          name: Publish to Github
+#          command: |
+#            ./gradlew styled-recycler-view:githubRelease --no-daemon --stacktrace 2> /dev/null
+#            ./gradlew styled-switch-view:githubRelease --no-daemon --stacktrace 2> /dev/null
+#            ./gradlew styled-slider-view:githubRelease --no-daemon --stacktrace 2> /dev/null
 
       - run:
           name: Publish to JCenter
           command: |
-            ./gradlew styled-recycler-view:bintrayUpload --stacktrace 2> /dev/null
-            ./gradlew styled-switch-view:bintrayUpload --stacktrace 2> /dev/null
-            ./gradlew styled-slider-view:bintrayUpload --stacktrace 2> /dev/null
+            ./gradlew styled-recycler-view:bintrayUpload --no-daemon --stacktrace 2> /dev/null
+            ./gradlew styled-switch-view:bintrayUpload --no-daemon --stacktrace 2> /dev/null
+            ./gradlew styled-slider-view:bintrayUpload --no-daemon --stacktrace 2> /dev/null
 
       - store_artifacts:
           path: styled-recycler-view/build/outputs/aar/

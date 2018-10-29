@@ -12,6 +12,9 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
+        versionCode buildVersionCode(project.styled_core_artifact_version)
+        versionName project.styled_core_artifact_version
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -24,10 +27,10 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     // Support library
     api rootProject.ext.dep.supportAppcompatV7
-    api rootProject.ext.dep.supportRecyclerViewV7
     // Kotlin
     api rootProject.ext.dep.kotlinStdlib
     api rootProject.ext.dep.kotlinStdlibJdk7
+
     // Unit tests.
     testImplementation rootProject.ext.dep.testJunit
     testImplementation rootProject.ext.dep.testMockito
@@ -35,3 +38,6 @@ dependencies {
     androidTestImplementation rootProject.ext.dep.testRunner
     androidTestImplementation rootProject.ext.dep.testEspressoCore
 }
+
+// Deployment script.
+apply from: 'deploy.gradle'
