@@ -197,7 +197,9 @@ abstract class StyledBaseSliderView : AppCompatSeekBar {
     /**
      * Called in [onDraw] and is to draw the thumb.
      */
-    protected abstract fun drawThumb(canvas: Canvas)
+    protected open fun drawThumb(canvas: Canvas) {
+        // DO NOTHING
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isEnabled) {
@@ -230,7 +232,13 @@ abstract class StyledBaseSliderView : AppCompatSeekBar {
             MotionEvent.ACTION_CANCEL,
             MotionEvent.ACTION_UP -> {
                 touchDragging = false
-                progress = positionToIntProgress(event.x)
+
+                val x = constraintTouchX(
+                    touchX = event.x,
+                    from = thumbStartX,
+                    to = thumbEndX)
+
+                progress = positionToIntProgress(x)
 
                 return true
             }

@@ -75,16 +75,16 @@ jobs:
 #      - run:
 #          name: Publish to Github
 #          command: |
-#            ./gradlew styled-recycler-view:githubRelease --no-daemon --stacktrace 2> /dev/null
-#            ./gradlew styled-switch-view:githubRelease --no-daemon --stacktrace 2> /dev/null
-#            ./gradlew styled-slider-view:githubRelease --no-daemon --stacktrace 2> /dev/null
+#            ./gradlew styled-recycler-view:githubRelease --no-daemon --stacktrace || exit 0
+#            ./gradlew styled-switch-view:githubRelease --no-daemon --stacktrace || exit 0
+#            ./gradlew styled-slider-view:githubRelease --no-daemon --stacktrace || exit 0
 
       - run:
           name: Publish to JCenter
           command: |
-            ./gradlew styled-recycler-view:bintrayUpload --no-daemon --stacktrace 2> /dev/null
-            ./gradlew styled-switch-view:bintrayUpload --no-daemon --stacktrace 2> /dev/null
-            ./gradlew styled-slider-view:bintrayUpload --no-daemon --stacktrace 2> /dev/null
+            ./gradlew styled-recycler-view:bintrayUpload --no-daemon --stacktrace || exit 0
+            ./gradlew styled-switch-view:bintrayUpload --no-daemon --stacktrace || exit 0
+            ./gradlew styled-slider-view:bintrayUpload --no-daemon --stacktrace || exit 0
 
       - store_artifacts:
           path: styled-recycler-view/build/outputs/aar/
