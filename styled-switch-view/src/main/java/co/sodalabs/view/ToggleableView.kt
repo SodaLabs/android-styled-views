@@ -16,7 +16,7 @@ open class ToggleableView : View {
     /**
      * Listener used to dispatch switch events.
      */
-    protected var onToggledListener: OnToggleListener? = null
+    var onToggledListener: OnToggleListener? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
