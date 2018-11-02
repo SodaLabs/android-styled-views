@@ -56,4 +56,5 @@ dependencies {
 }
 
 // Deployment script.
-apply from: 'deploy.gradle'
+// FIXME: Related to issue #23
+//apply from: 'deploy.gradle'

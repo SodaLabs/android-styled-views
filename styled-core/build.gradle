@@ -40,4 +40,4 @@ dependencies {
 }
 
 // Deployment script.
-apply from: 'deploy.gradle'
+//apply from: 'deploy.gradle'

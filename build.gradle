@@ -20,19 +20,21 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath rootProject.ext.dep.kotlinGradle
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
         // Bintray/jcenter deployment.
-        classpath 'com.novoda:bintray-release:0.8.1'
+        // FIXME: Related to issue #23
+//        classpath 'com.novoda:bintray-release:0.8.1'
+//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
 
         // Github release note helpers
-        classpath 'co.riiid:gradle-github-plugin:0.4.2'
-        classpath 'gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.54'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+//        classpath 'co.riiid:gradle-github-plugin:0.4.2'
+//        classpath 'gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.54'
+//        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
 }
 
