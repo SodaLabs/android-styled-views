@@ -28,7 +28,7 @@ buildscript {
 
         // Bintray/jcenter deployment.
         // FIXME: Related to issue #23
-//        classpath 'com.novoda:bintray-release:0.8.1'
+        classpath 'com.novoda:bintray-release:0.9'
 //        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
 
         // Github release note helpers

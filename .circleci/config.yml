@@ -2,7 +2,7 @@ version: 2
 
 jobs:
   build-job:
-    working_directory: ~/styled-recycler-view
+    working_directory: ~/project
 
     docker:
       - image: circleci/android:api-27-alpha
@@ -47,7 +47,7 @@ jobs:
             - "~/.m2"
 
   deploy-job:
-    working_directory: ~/styled-recycler-view
+    working_directory: ~/project
 
     docker:
       - image: circleci/android:api-27-alpha
