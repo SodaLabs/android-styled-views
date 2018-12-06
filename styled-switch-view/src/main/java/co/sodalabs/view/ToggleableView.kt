@@ -4,14 +4,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 
-typealias OnToggleListener = (toggleableView: ToggleableView, isOn: Boolean) -> Unit
+typealias OnToggleListener = (toggleableView: ToggleableView, isOn: Boolean, userTriggered: Boolean) -> Unit
 
-open class ToggleableView : View {
+abstract class ToggleableView : View {
 
     /**
      * Boolean state of this Switch.
      */
-    open var isOn: Boolean = false
+    open val isOn: Boolean = false
+
+    abstract fun setOnOff(value: Boolean, userTriggered: Boolean)
 
     /**
      * Listener used to dispatch switch events.

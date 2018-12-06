@@ -174,21 +174,28 @@ class StyledSwitchView : ToggleableView {
     /**
      * Boolean state of this Switch.
      */
-    override var isOn: Boolean = false
-        set(value) {
-            field = value
-            if (thumbAnimator?.isStarted == false && thumbAnimator?.isStarted == false) {
-                setupThumbBounds(thumbBounds, thumbOnCenterX, thumbOffCenterX, thumbRadius, value)
-            }
-            onToggledListener?.invoke(this, value)
-            postInvalidate()
-        }
+    private var isActualOn: Boolean = false
+    override val isOn: Boolean
+        get() = isActualOn
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         initView()
         initProperties(attrs)
+    }
+
+    override fun setOnOff(value: Boolean, userTriggered: Boolean) {
+        if (value != isActualOn) {
+            isActualOn = value
+            if (thumbAnimator?.isStarted == false && thumbAnimator?.isStarted == false) {
+                setupThumbBounds(thumbBounds, thumbOnCenterX, thumbOffCenterX, thumbRadius, value)
+            }
+
+            onToggledListener?.invoke(this, value, userTriggered)
+
+            postInvalidate()
+        }
     }
 
     private fun initView() {
@@ -200,7 +207,7 @@ class StyledSwitchView : ToggleableView {
         val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledSwitchView, 0, 0)
         for (i in 0 until attributes.indexCount) {
             when (attributes.getIndex(i)) {
-                R.styleable.StyledSwitchView_swOn -> isOn = attributes.getBoolean(R.styleable.StyledSwitchView_swOn, false)
+                R.styleable.StyledSwitchView_swOn -> setOnOff(attributes.getBoolean(R.styleable.StyledSwitchView_swOn, false), false)
                 R.styleable.StyledSwitchView_swColorDisabled -> colorDisabled = attributes.getColor(R.styleable.StyledSwitchView_swColorDisabled,
                     Color.parseColor("#D3D3D3"))
                 R.styleable.StyledSwitchView_swTextOn -> labelOn = attributes.getString(R.styleable.StyledSwitchView_swTextOn)
@@ -422,9 +429,9 @@ class StyledSwitchView : ToggleableView {
     override fun performClick(): Boolean {
         super.performClick()
 
-        val newIsOn = !isOn
-        animateThumbnail(newIsOn)
-        isOn = newIsOn
+        val newValue = !isOn
+        animateThumbnail(newValue)
+        setOnOff(newValue, userTriggered = true)
 
         return true
     }
@@ -475,9 +482,9 @@ class StyledSwitchView : ToggleableView {
                 if (span < 200) {
                     performClick()
                 } else {
-                    val newIsOn = x >= outlineRectBound.centerX()
-                    animateThumbnail(newIsOn)
-                    isOn = newIsOn
+                    val newValue = x >= outlineRectBound.centerX()
+                    animateThumbnail(newValue)
+                    setOnOff(newValue, userTriggered = true)
                 }
                 invalidate()
                 return true
