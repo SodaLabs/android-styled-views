@@ -4,10 +4,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatSeekBar
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.widget.ProgressBar
 import co.sodalabs.view.slider.R
 
 /**
@@ -60,6 +62,26 @@ abstract class StyledBaseSliderView : AppCompatSeekBar {
     protected var touchDragSlop: Float = context.resources.getDimension(R.dimen.default_touch_drag_slop)
 
     protected val tmpBound = RectF()
+
+    protected val progressInternalMethod by lazy {
+        val clazz = ProgressBar::class.java
+
+        val setProgressInternal = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            clazz.getDeclaredMethod(
+                "setProgress",
+                Int::class.java,
+                Boolean::class.java)
+        } else {
+            clazz.getDeclaredMethod(
+                "setProgressInternal",
+                Int::class.java,
+                Boolean::class.java,
+                Boolean::class.java)
+        }
+
+        setProgressInternal.isAccessible = true
+        return@lazy setProgressInternal
+    }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -211,7 +233,8 @@ abstract class StyledBaseSliderView : AppCompatSeekBar {
                         from = thumbStartX,
                         to = thumbEndX)
 
-                    progress = positionToIntProgress(x)
+                    val prog = positionToIntProgress(x)
+                    callProgressInternal(prog, true)
                 }
 
                 return true
@@ -226,12 +249,21 @@ abstract class StyledBaseSliderView : AppCompatSeekBar {
                     from = thumbStartX,
                     to = thumbEndX)
 
-                progress = positionToIntProgress(x)
+                val prog = positionToIntProgress(x)
+                callProgressInternal(prog, true)
 
                 return true
             }
 
             else -> return false
+        }
+    }
+
+    protected fun callProgressInternal(progress: Int, fromUser: Boolean, animate: Boolean = false) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            progressInternalMethod.invoke(this, progress, fromUser)
+        } else {
+            progressInternalMethod.invoke(this, progress, fromUser, animate)
         }
     }
 

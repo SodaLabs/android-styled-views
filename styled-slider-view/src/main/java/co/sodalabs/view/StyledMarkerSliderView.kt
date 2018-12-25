@@ -186,7 +186,8 @@ open class StyledMarkerSliderView : StyledBaseSliderView {
                         from = thumbStartX,
                         to = thumbEndX)
 
-                    progress = positionToIntProgress(x)
+                    val prog = positionToIntProgress(x)
+                    callProgressInternal(prog, true)
                 }
 
                 return true
@@ -235,7 +236,8 @@ open class StyledMarkerSliderView : StyledBaseSliderView {
         thumbAnimator?.cancel()
         thumbAnimator = ValueAnimator.ofInt(currentProgress, nextProgress)
         thumbAnimator?.addUpdateListener { animator ->
-            progress = animator.animatedValue as Int
+            val prog = animator.animatedValue as Int
+            callProgressInternal(prog, true)
         }
         thumbAnimator?.interpolator = AccelerateDecelerateInterpolator()
         thumbAnimator?.duration = (450 * (Math.abs(currentProgress - nextProgress) / 100f)).toLong()
