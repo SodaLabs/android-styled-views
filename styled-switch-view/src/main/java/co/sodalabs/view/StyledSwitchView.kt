@@ -10,6 +10,7 @@ import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -186,11 +187,15 @@ class StyledSwitchView : ToggleableView {
     }
 
     override fun setOnOff(value: Boolean, userTriggered: Boolean) {
+        ensureUIThread()
+
         if (value != isActualOn) {
             isActualOn = value
-            if (thumbAnimator?.isStarted == false && thumbAnimator?.isStarted == false) {
-                setupThumbBounds(thumbBounds, thumbOnCenterX, thumbOffCenterX, thumbRadius, value)
-            }
+            // FIXME: There is a inconsistent internal state and the presentation
+            // FIXME: The programmatic change always overrides the animation.
+            // if (thumbAnimator?.isStarted == false) {
+            setupThumbBounds(thumbBounds, thumbOnCenterX, thumbOffCenterX, thumbRadius, value)
+            // }
 
             onToggledListener?.invoke(this, value, userTriggered)
 
@@ -508,6 +513,12 @@ class StyledSwitchView : ToggleableView {
             // TODO: Dynamic duration
             duration = 250
             start()
+        }
+    }
+
+    private fun ensureUIThread() {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            throw IllegalThreadStateException("Must run on the UI thread")
         }
     }
 }
