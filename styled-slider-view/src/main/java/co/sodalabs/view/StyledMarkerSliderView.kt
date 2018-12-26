@@ -172,6 +172,7 @@ open class StyledMarkerSliderView : StyledBaseSliderView {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 touchStartX = event.x
+                onStartTrackingTouch()
                 return true
             }
 
@@ -190,12 +191,21 @@ open class StyledMarkerSliderView : StyledBaseSliderView {
                     callProgressInternal(prog, true)
                 }
 
+                if (!isTrackingTouch) {
+                    onStartTrackingTouch()
+                }
+
                 return true
             }
 
             MotionEvent.ACTION_CANCEL,
             MotionEvent.ACTION_UP -> {
+                if (!isTrackingTouch) {
+                    onStartTrackingTouch()
+                }
+
                 touchDragging = false
+                onStopTrackingTouch()
 
                 val (closestX, closestIndex) = findClosestMarkerXAndIndex(event.x)
                 snapToClosestMarkerSmoothly(closestX)
