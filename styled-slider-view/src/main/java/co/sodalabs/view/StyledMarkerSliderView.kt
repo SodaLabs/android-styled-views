@@ -16,7 +16,6 @@ import co.sodalabs.view.slider.R
  * @see [R.attr.slMarkerDrawableStart] The marker (tick) drawable at the start.
  * @see [R.attr.slMarkerDrawableEnd] The marker (tick) drawable at the end.
  * @see [R.attr.slMarkerNum] The amount of markers on the track. The markers are distributed evenly spaced.
- * @see [R.attr.slTouchDragSlop] A slop where the touch forms a drag if the move distance is over.
  */
 open class StyledMarkerSliderView : StyledBaseSliderView {
 
@@ -59,9 +58,7 @@ open class StyledMarkerSliderView : StyledBaseSliderView {
     }
 
     private fun initProperties(attrs: AttributeSet?) {
-        val typedArray = context.theme.obtainStyledAttributes(
-            attrs,
-            R.styleable.StyledSliderView, 0, 0)
+        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledSliderView, 0, 0)
 
         thumbDrawable = ContextCompat.getDrawable(context, R.drawable.default_slider_thumb)
         // Override the track drawable
@@ -92,6 +89,11 @@ open class StyledMarkerSliderView : StyledBaseSliderView {
     private fun updateMarkerCount() {
         println("MarkerNum: $markerNum | Max: $max")
         markerNum = max + 1
+    }
+
+    fun setMarkerCount(count: Int) {
+        markerNum = count
+        invalidate()
     }
 
     override fun setMax(max: Int) {

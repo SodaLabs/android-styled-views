@@ -18,7 +18,6 @@ import co.sodalabs.view.slider.R
  * @see [R.attr.slMarkerDrawableStart] The marker (tick) drawable at the start.
  * @see [R.attr.slMarkerDrawableEnd] The marker (tick) drawable at the end.
  * @see [R.attr.slMarkerNum] The amount of markers on the track. The markers are distributed evenly spaced.
- * @see [R.attr.slTouchDragSlop] A slop where the touch forms a drag if the move distance is over.
  */
 @Suppress("MemberVisibilityCanBePrivate")
 abstract class StyledBaseSliderView : AppCompatSeekBar {
@@ -56,11 +55,6 @@ abstract class StyledBaseSliderView : AppCompatSeekBar {
         }
 
     val tmpBound = RectF()
-    var touchDragSlop: Float = context.resources.getDimension(R.dimen.default_touch_drag_slop)
-        set(value) {
-            field = value
-            invalidate()
-        }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -92,9 +86,6 @@ abstract class StyledBaseSliderView : AppCompatSeekBar {
                 }
                 R.styleable.StyledSliderView_slTrackBackgroundDrawable -> {
                     trackBackgroundDrawable = typedArray.getCompatDrawable(context, R.styleable.StyledSliderView_slTrackBackgroundDrawable)
-                }
-                R.styleable.StyledSliderView_slTouchDragSlop -> {
-                    touchDragSlop = typedArray.getDimension(R.styleable.StyledSliderView_slTouchDragSlop, touchDragSlop)
                 }
             }
         }

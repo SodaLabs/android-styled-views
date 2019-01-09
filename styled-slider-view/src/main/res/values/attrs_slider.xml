@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="StyledSliderView">
-        <attr name="slTouchDragSlop" format="dimension" />
         <attr name="slThumbDrawable" format="reference" />
         <attr name="slTrackBackgroundDrawable" format="reference" />
         <attr name="slTrackForegroundDrawable" format="reference" />
