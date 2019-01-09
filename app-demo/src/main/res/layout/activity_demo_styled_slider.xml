@@ -103,7 +103,6 @@
         app:slMarkerDrawableMiddle="@drawable/default_marker_slider_marker_middle"
         app:slMarkerDrawableStart="@drawable/default_marker_slider_marker_start"
         app:slThumbDrawable="@drawable/default_slider_thumb"
-        app:slTouchDragSlop="2dp"
         app:slTrackBackgroundDrawable="@drawable/default_slider_background_track" />
 
     <TextView
